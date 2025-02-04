@@ -11,11 +11,9 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "fmt": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
-    "fmt:check": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
-    "release": "turbo run build && changeset publish"
+    "fmt:check": "prettier --check '**/*.{js,jsx,ts,tsx,json}'"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.12",
     "@types/node": "^20.11.0",
     "prettier": "^3.3.3",
     "turbo": "latest"

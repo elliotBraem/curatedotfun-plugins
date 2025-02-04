@@ -58,10 +58,10 @@ The following plugins are currently supported:
 | Plugin | Type | Description | Development Port |
 |--------|------|-------------|------------------|
 | ai-transform | Transform | AI-powered content transformation | 3002 |
-| notion | Source | Notion integration | 3003 |
-| rss | Source | RSS feed integration | 3004 |
+| notion | Distributor | Notion integration | 3003 |
+| rss | Distributor | RSS feed integration | 3004 |
 | simple-transform | Transform | Basic content transformation | 3005 |
-| supabase | Source | Supabase integration | 3006 |
+| supabase | Distributor | Supabase integration | 3006 |
 | telegram | Distributor | Telegram channel integration | 3007 |
 
 ### Plugin Loading

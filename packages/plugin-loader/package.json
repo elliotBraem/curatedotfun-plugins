@@ -1,0 +1,21 @@
+{
+  "name": "@curatedotfun/plugin-loader",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rspack build",
+    "dev": "NODE_ENV=development rspack serve",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@curatedotfun/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@module-federation/node": "^2.6.22",
+    "@rspack/cli": "latest",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

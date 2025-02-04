@@ -1,0 +1,14 @@
+{
+  "name": "@curatedotfun/example",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "rspack build",
+    "start": "rspack build && node dist/main.js"
+  },
+  "devDependencies": {
+    "@module-federation/node": "^2.6.22",
+    "@rspack/cli": "latest",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

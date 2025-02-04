@@ -1,0 +1,19 @@
+{
+  "name": "@curatedotfun/simple-transform",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rspack build",
+    "dev": "rspack serve",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@curatedotfun/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@rspack/cli": "latest",
+    "typescript": "^5.0.0"
+  }
+}

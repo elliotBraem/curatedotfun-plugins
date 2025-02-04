@@ -5,10 +5,10 @@
 
 <div align="center">
 
-<h1 style="font-size: 2.5rem; font-weight: bold;">Project Title</h1>
+<h1 style="font-size: 2.5rem; font-weight: bold;">curate.fun plugins</h1>
 
   <p>
-    <strong>a basic project template for new projects</strong>
+    <strong>monorepo for plugins compatible with curate.fun runtime</strong>
   </p>
 
 </div>
@@ -18,9 +18,9 @@
 
 - [Getting Started](#getting-started)
   - [Installing dependencies](#installing-dependencies)
-  - [Running the app](#running-the-app)
-  - [Building for production](#building-for-production)
-  - [Running tests](#running-tests)
+  - [Creating a new plugin](#creating-a-new-plugin)
+  - [Development](#development)
+  - [Building](#building)
 - [Contributing](#contributing)
 
 </details>
@@ -33,18 +33,83 @@
 bun install
 ```
 
-### Running the app
+### Creating a new plugin
 
-First, run the development server:
+To create a new plugin, use the [curatedotfun-plugin-template](https://github.com/potlock/curatedotfun-plugin-template) as a starting point.
+
+Then, publish as a standalone package. Make a pull request to add your plugin below:
+
+### Development
+
+Each plugin runs on its own port in development mode with hot reloading:
 
 ```bash
+# Run all plugins
 bun run dev
+
+# Run specific plugins
+bun run dev --filter=@curatedotfun/gpt-transform    # Port 3002
+bun run dev --filter=@curatedotfun/telegram         # Port 3003
+bun run dev --filter=@curatedotfun/rss              # Port 3004
+bun run dev --filter=@curatedotfun/simple-transform # Port 3005
 ```
 
-### Building for production
+### Plugin Loading
+
+The `@curatedotfun/plugin-loader` package provides a simple way to load and manage plugins:
+
+```typescript
+import { PluginLoader } from "@curatedotfun/plugin-loader";
+
+// Create loader instance (reload plugins every 5 minutes)
+const loader = new PluginLoader(5 * 60 * 1000);
+
+// Load a transform plugin
+const gptTransform = await loader.loadPlugin("gpt-transform", {
+  url: "http://localhost:3002/remoteEntry.js",
+  type: "transform",
+  config: {
+    prompt: "Your prompt",
+    apiKey: "your-api-key"
+  }
+});
+
+// Load a distributor plugin
+const telegram = await loader.loadPlugin("telegram", {
+  url: "http://localhost:3003/remoteEntry.js",
+  type: "distributor",
+  config: {
+    botToken: "your-bot-token",
+    channelId: "your-channel-id"
+  }
+});
+
+// Use plugins
+await gptTransform.transform({ input: "Hello" });
+await telegram.distribute("feed-1", "Content");
+
+// Force reload all plugins
+await loader.reloadAll();
+```
+
+Benefits:
+- Hot reloading during development
+- Automatic plugin reloading
+- Plugin instance caching
+- Type-safe plugin loading
+
+### Building
+
+Build all plugins:
 
 ```bash
 bun run build
+```
+
+Or build a specific plugin:
+
+```bash
+bun run build --filter=@curatedotfun/gpt-transform
 ```
 
 ### Running tests

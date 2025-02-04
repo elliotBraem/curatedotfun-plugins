@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/simple-transform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,10 +23,8 @@
     "dev": "rspack serve",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@curatedotfun/types": "workspace:*"
-  },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "typescript": "^5.0.0"
   }

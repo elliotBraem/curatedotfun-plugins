@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/plugin-loader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Plugin loader for curatedotfun plugins",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,10 +23,8 @@
     "dev": "NODE_ENV=development rspack serve",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@curatedotfun/types": "workspace:*"
-  },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@module-federation/node": "^2.6.22",
     "@rspack/cli": "latest",
     "@types/node": "^20.0.0",

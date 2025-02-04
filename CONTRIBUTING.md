@@ -18,10 +18,6 @@ To contribute to this project, follow these steps:
 
 Please follow the existing code style and conventions used in the project.
 
-## Testing
-
-This repository uses playwright tests, which can be found in [/playwright-tests](./playwright-tests/). Ensure that your changes include appropriate tests and that existing tests pass.
-
 ## Submitting Issues
 
 If you encounter any issues or have feature requests, please submit them through GitHub issues. Include as much detail as possible to help us understand and address the problem efficiently.

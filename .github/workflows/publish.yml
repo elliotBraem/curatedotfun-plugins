@@ -8,66 +8,24 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
       - uses: oven-sh/setup-bun@v1
-      
-      - name: Install dependencies
-        run: bun install
-      
-      - name: Build
-        run: bun run build
-      
+      - run: bun install
+      - run: bun run build
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "lts/*"
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Release
+      - name: Publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # Get all workspace packages
-          PACKAGES=$(find packages -maxdepth 1 -mindepth 1 -type d)
-          
-          # For each package
-          for PKG in $PACKAGES; do
-            if [ -f "$PKG/package.json" ]; then
-              echo "Publishing $PKG"
-              cd $PKG
-              
-              # Get current version
-              VERSION=$(node -p "require('./package.json').version")
-              
-              # Get commit messages since last tag
-              COMMITS=$(git log --format=%B $(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD)
-              
-              # Determine version bump based on commit messages
-              if echo "$COMMITS" | grep -q "^BREAKING CHANGE:\|^[[:alpha:]]\+!:"; then
-                # Major bump for breaking changes
-                NEW_VERSION=$(node -p "require('semver').inc('$VERSION', 'major')")
-              elif echo "$COMMITS" | grep -q "^feat:\|^feature:"; then
-                # Minor bump for features
-                NEW_VERSION=$(node -p "require('semver').inc('$VERSION', 'minor')")
-              else
-                # Patch bump for fixes and others
-                NEW_VERSION=$(node -p "require('semver').inc('$VERSION', 'patch')")
-              fi
-              
-              # Update package.json version
-              npm version $NEW_VERSION --no-git-tag-version
-              
-              # Publish to npm
-              npm publish --access public
-              
+          for pkg in packages/*; do
+            if [ -f "$pkg/package.json" ]; then
+              cd $pkg
+              npm publish --access public || true
               cd ../..
             fi
           done

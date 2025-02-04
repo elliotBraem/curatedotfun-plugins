@@ -37,6 +37,8 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "rss",
       filename: "remoteEntry.js",
+      runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
+      library: { type: 'commonjs-module' },
       exposes: {
         "./plugin": "./src/index.ts",
       },

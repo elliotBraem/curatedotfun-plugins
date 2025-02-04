@@ -14,7 +14,7 @@ interface OpenRouterResponse {
 }
 
 export default class GPTTransformer implements Plugin {
-  name = "gpt-transform";
+  name = "gpt_transform";
   version = "0.0.1";
   private prompt: string = "";
   private apiKey: string = "";

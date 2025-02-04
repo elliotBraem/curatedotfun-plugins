@@ -23,10 +23,10 @@ export class PluginLoader {
   private async initModuleFederation(name: string, remoteUrl: string) {
     await performReload(true);
     return init({
-      name: 'plugin-loader',
+      name: 'plugin_loader',
       remotes: [
         {
-          name,
+          name: name,
           entry: remoteUrl,
         },
       ],
@@ -42,6 +42,7 @@ export class PluginLoader {
     try {
       // Initialize Module Federation runtime
       await this.initModuleFederation(name, pluginConfig.url);
+      console.log("initializing, ", `${name}/plugin`);
       
       // Load the remote module
       const container = await loadRemote(`${name}/plugin`) as { default?: any } | any;
@@ -120,7 +121,7 @@ export class PluginLoader {
 const loader = new PluginLoader();
 
 // Load a transform plugin
-const gptTransform = await loader.loadPlugin("gpt-transform", {
+const gptTransform = await loader.loadPlugin("gpt_transform", {
   url: "http://localhost:3002/remoteEntry.js",
   type: "transform",
   config: {

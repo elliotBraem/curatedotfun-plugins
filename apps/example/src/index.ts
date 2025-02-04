@@ -7,7 +7,7 @@ async function main() {
 
   try {
     // Load transform plugin
-    const gptTransform = await loader.loadPlugin("gpt-transform", {
+    const gptTransform = await loader.loadPlugin("gpt_transform", {
       url: "http://localhost:3002/remoteEntry.js",
       type: "transform",
       config: {

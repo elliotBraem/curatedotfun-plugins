@@ -44,9 +44,7 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "plugin_loader",
       filename: "remoteEntry.js",
-      remoteType: 'script',
-      isServer: true,
-      useRuntimePlugin: true,
+      runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
       exposes: {
         './plugin': './src/index.ts',
       },

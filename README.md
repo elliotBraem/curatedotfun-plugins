@@ -48,11 +48,21 @@ Each plugin runs on its own port in development mode with hot reloading:
 bun run dev
 
 # Run specific plugins
-bun run dev --filter=@curatedotfun/gpt-transform    # Port 3002
-bun run dev --filter=@curatedotfun/telegram         # Port 3003
-bun run dev --filter=@curatedotfun/rss              # Port 3004
-bun run dev --filter=@curatedotfun/simple-transform # Port 3005
+bun run dev --filter=@curatedotfun/plugin-name
 ```
+
+### Supported Plugins
+
+The following plugins are currently supported:
+
+| Plugin | Type | Description | Development Port |
+|--------|------|-------------|------------------|
+| ai-transform | Transform | AI-powered content transformation | 3002 |
+| notion | Source | Notion integration | 3003 |
+| rss | Source | RSS feed integration | 3004 |
+| simple-transform | Transform | Basic content transformation | 3005 |
+| supabase | Source | Supabase integration | 3006 |
+| telegram | Distributor | Telegram channel integration | 3007 |
 
 ### Plugin Loading
 
@@ -93,6 +103,7 @@ await loader.reloadAll();
 ```
 
 Benefits:
+
 - Hot reloading during development
 - Automatic plugin reloading
 - Plugin instance caching

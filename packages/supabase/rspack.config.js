@@ -7,7 +7,7 @@ module.exports = {
   target: "async-node",
   devtool: "source-map",
   output: {
-    uniqueName: "telegram",
+    uniqueName: "supabase",
     publicPath: "auto",
     path: path.resolve(__dirname, "dist"),
     clean: true,
@@ -16,7 +16,7 @@ module.exports = {
   devServer: {
     static: path.join(__dirname, "dist"),
     hot: true,
-    port: 3007,
+    port: 3006,
     devMiddleware: {
       writeToDisk: true,
     },
@@ -35,7 +35,7 @@ module.exports = {
   },
   plugins: [
     new rspack.container.ModuleFederationPlugin({
-      name: "telegram",
+      name: "supabase",
       filename: "remoteEntry.js",
       runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
       library: { type: 'commonjs-module' },

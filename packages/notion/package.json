@@ -1,0 +1,35 @@
+{
+  "name": "@curatedotfun/notion",
+  "version": "0.0.1",
+  "description": "Notion plugin for curatedotfun",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/potlock/curatedotfun-plugins.git",
+    "directory": "packages/notion"
+  },
+  "keywords": [
+    "curatedotfun",
+    "notion",
+    "distribute",
+    "plugin"
+  ],
+  "scripts": {
+    "build": "rspack build",
+    "dev": "rspack serve",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@curatedotfun/types": "workspace:*",
+    "@notionhq/client": "^2.2.15"
+  },
+  "devDependencies": {
+    "@rspack/cli": "latest",
+    "typescript": "^5.0.0"
+  }
+}

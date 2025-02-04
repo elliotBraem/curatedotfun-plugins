@@ -1,0 +1,35 @@
+{
+  "name": "@curatedotfun/supabase",
+  "version": "0.0.1",
+  "description": "Supabase plugin for curatedotfun",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/potlock/curatedotfun-plugins.git",
+    "directory": "packages/supabase"
+  },
+  "keywords": [
+    "curatedotfun",
+    "supabase",
+    "distribute",
+    "plugin"
+  ],
+  "scripts": {
+    "build": "rspack build",
+    "dev": "rspack serve",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@curatedotfun/types": "workspace:*",
+    "@supabase/supabase-js": "^2.48.1"
+  },
+  "devDependencies": {
+    "@rspack/cli": "latest",
+    "typescript": "^5.0.0"
+  }
+}

@@ -42,11 +42,9 @@ export class PluginLoader {
     try {
       // Initialize Module Federation runtime
       await this.initModuleFederation(name, pluginConfig.url);
-      console.log("initializing, ", `${name}/plugin`);
       
       // Load the remote module
       const container = await loadRemote(`${name}/plugin`) as { default?: any } | any;
-      console.log("we here");
       if (!container) {
         throw new Error(`Failed to load plugin ${name}: Remote module not found`);
       }
@@ -60,10 +58,8 @@ export class PluginLoader {
       // Store the plugin configuration for reloads
       (plugin as any).__config = pluginConfig;
       
-      // Initialize if it's a distributor plugin
-      if (pluginConfig.type === "distributor") {
-        await (plugin as any).initialize(name, pluginConfig.config);
-      }
+      // Initialize
+      await (plugin as any).initialize(pluginConfig.config);
 
       // Cache the instance
       this.pluginCache.set(name, {

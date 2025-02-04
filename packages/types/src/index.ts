@@ -12,7 +12,7 @@ export interface TransformOptions {
 export interface DistributorPlugin {
   name: string;
   version: string;
-  initialize: (feedId: string, config: Record<string, string>) => Promise<void>;
+  initialize: (config: Record<string, string>) => Promise<void>;
   distribute: (feedId: string, content: string) => Promise<void>;
 }
 

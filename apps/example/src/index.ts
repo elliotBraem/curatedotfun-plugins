@@ -1,6 +1,9 @@
 import { PluginLoader } from "../../../packages/plugin-loader/src";
+import dotenv from "dotenv";
 
 async function main() {
+
+  dotenv.config();
   // Create a plugin loader instance
   // Reload plugins every minute in development
   const loader = new PluginLoader(60 * 1000);
@@ -11,8 +14,8 @@ async function main() {
       url: "http://localhost:3002/remoteEntry.js",
       type: "transform",
       config: {
-        prompt: "Your prompt here",
-        apiKey: "your-api-key"
+        prompt: "Transform the greeting into a farewell",
+        apiKey: process.env.OPENROUTER_API_KEY!
       }
     }) as any;
 
@@ -27,8 +30,8 @@ async function main() {
       url: "http://localhost:3003/remoteEntry.js", // Different port for each plugin
       type: "distributor",
       config: {
-        botToken: "your-bot-token",
-        channelId: "your-channel-id"
+        botToken: process.env.TELEGRAM_BOT_TOKEN!,
+        channelId: process.env.TELEGRAM_CHANNEL_ID!
       }
     }) as any;
 
@@ -37,14 +40,20 @@ async function main() {
 
     // Demonstrate cache and reload
     console.log("Loading plugin again (should use cache)...");
-    const cachedPlugin = await loader.loadPlugin("gpt-transform", {
+    const cachedPlugin = await loader.loadPlugin("gpt_transform", {
       url: "http://localhost:3002/remoteEntry.js",
       type: "transform",
       config: {
-        prompt: "Your prompt here",
-        apiKey: "your-api-key"
+        prompt: "Say a greeting back",
+        apiKey: process.env.OPENROUTER_API_KEY!
       }
     });
+
+    const r = await cachedPlugin.transform({
+      input: "Goodbye world"
+    });
+
+    console.log("Second Transform", r);
 
     // Force reload all plugins
     console.log("Reloading all plugins...");

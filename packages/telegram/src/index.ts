@@ -8,7 +8,6 @@ export default class TelegramPlugin implements DistributorPlugin {
   private messageThreadId: string | null = null;
 
   async initialize(
-    feedId: string,
     config: Record<string, string>,
   ): Promise<void> {
     // Validate required config

@@ -117,7 +117,7 @@ export class PluginLoader {
 const loader = new PluginLoader();
 
 // Load a transform plugin
-const gptTransform = await loader.loadPlugin("gpt_transform", {
+const gptTransform = await loader.loadPlugin("ai-transform", {
   url: "http://localhost:3002/remoteEntry.js",
   type: "transform",
   config: {

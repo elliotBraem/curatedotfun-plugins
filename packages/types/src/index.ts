@@ -1,19 +1,21 @@
-export interface Plugin {
+export interface Plugin<TConfig extends Record<string, unknown> = Record<string, string>> {
   name: string;
   version: string;
-  transform: (input: any) => Promise<any>;
+  initialize: (config: TConfig) => Promise<void>;
+  shutdown?: () => Promise<void>;
 }
 
-export interface TransformOptions {
-  input: any;
-  config?: Record<string, any>;
+export interface ActionArgs<TInput = unknown, TConfig = unknown> {
+  input: TInput;
+  config?: TConfig;
 }
 
-export interface DistributorPlugin {
-  name: string;
-  version: string;
-  initialize: (config: Record<string, string>) => Promise<void>;
-  distribute: (feedId: string, content: string) => Promise<void>;
+export interface DistributorPlugin<TInput = unknown, TConfig extends Record<string, unknown> = Record<string, unknown>> extends Plugin<TConfig> {
+  distribute: (args: ActionArgs<TInput, TConfig>) => Promise<void>;
+}
+
+export interface TransformerPlugin<TInput = unknown, TOutput = unknown, TConfig extends Record<string, unknown> = Record<string, unknown>> extends Plugin<TConfig> {
+  transform: (args: ActionArgs<TInput, TConfig>) => Promise<TOutput>;
 }
 
 export interface RssItem {
@@ -25,7 +27,7 @@ export interface RssItem {
 }
 
 export interface DBOperations {
-  saveRssItem: (feedId: string, item: RssItem) => void;
-  deleteOldRssItems: (feedId: string, maxItems: number) => void;
-  getRssItems: (feedId: string, limit: number) => RssItem[];
+  saveRssItem: (feedId: string, item: RssItem) => Promise<void>;
+  deleteOldRssItems: (feedId: string, maxItems: number) => Promise<void>;
+  getRssItems: (feedId: string, limit: number) => Promise<RssItem[]>;
 }

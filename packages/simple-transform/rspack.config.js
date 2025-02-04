@@ -7,7 +7,7 @@ module.exports = {
   target: "async-node",
   devtool: "source-map",
   output: {
-    uniqueName: "simple_transform",
+    uniqueName: "simple-transform",
     publicPath: "auto",
     path: path.resolve(__dirname, "dist"),
     clean: true,
@@ -35,7 +35,7 @@ module.exports = {
   },
   plugins: [
     new rspack.container.ModuleFederationPlugin({
-      name: "simple_transform",
+      name: "simple-transform",
       filename: "remoteEntry.js",
       runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
       library: { type: 'commonjs-module' },

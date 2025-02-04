@@ -1,9 +1,17 @@
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
-import { DistributorPlugin, DBOperations, RssItem } from "@curatedotfun/types";
+import { DistributorPlugin, DBOperations, RssItem, ActionArgs } from "@curatedotfun/types";
 import { RssService } from "./rss.service";
 
-export default class RssPlugin implements DistributorPlugin {
+interface RssConfig {
+  feedId: string;
+  title: string;
+  maxItems?: string;
+  path?: string;
+  [key: string]: string | undefined;
+}
+
+export default class RssPlugin implements DistributorPlugin<string, RssConfig> {
   name = "@curatedotfun/rss";
   version = "0.0.1";
   private services: Map<string, RssService> = new Map();
@@ -17,30 +25,33 @@ export default class RssPlugin implements DistributorPlugin {
     this.dbOps = dbOperations;
   }
 
-  async initialize(
-    feedId: string,
-    config: Record<string, string>,
-  ): Promise<void> {
+  async initialize(config: RssConfig): Promise<void> {
     if (!config.title) {
       throw new Error("RSS plugin requires title");
+    }
+    if (!config.feedId) {
+      throw new Error("RSS plugin requires feedId");
     }
 
     const maxItems = config.maxItems ? parseInt(config.maxItems) : 100;
 
     // Create a new RSS service for this feed
     const service = new RssService(
-      feedId,
+      config.feedId,
       config.title,
       maxItems,
       config.path,
       this.dbOps,
     );
 
-    this.services.set(feedId, service);
+    this.services.set(config.feedId, service);
   }
 
-  async distribute(feedId: string, content: string): Promise<void> {
-    const service = this.services.get(feedId);
+  async distribute({ input: content, config }: ActionArgs<string, RssConfig>): Promise<void> {
+    if (!config?.feedId) {
+      throw new Error("RSS plugin requires feedId in config");
+    }
+    const service = this.services.get(config.feedId);
     if (!service) {
       throw new Error("RSS plugin not initialized for this feed");
     }

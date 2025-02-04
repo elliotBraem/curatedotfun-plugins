@@ -1,15 +1,20 @@
-import { DistributorPlugin } from "@curatedotfun/types";
+import { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
 
-export default class TelegramPlugin implements DistributorPlugin {
+interface TelegramConfig {
+  botToken: string;
+  channelId?: string;
+  messageThreadId?: string;
+  [key: string]: string | undefined;
+}
+
+export default class TelegramPlugin implements DistributorPlugin<string, TelegramConfig> {
   name = "telegram";
   version = "0.0.1";
   private botToken: string | null = null;
   private channelId: string | null = null;
   private messageThreadId: string | null = null;
 
-  async initialize(
-    config: Record<string, string>,
-  ): Promise<void> {
+  async initialize(config: TelegramConfig): Promise<void> {
     // Validate required config
     if (!config.botToken) {
       throw new Error("Telegram plugin requires botToken");
@@ -43,7 +48,7 @@ export default class TelegramPlugin implements DistributorPlugin {
     }
   }
 
-  async distribute(feedId: string, content: string): Promise<void> {
+  async distribute({ input: content }: ActionArgs<string, TelegramConfig>): Promise<void> {
     if (!this.botToken || (!this.channelId && !this.messageThreadId)) {
       throw new Error("Telegram plugin not initialized");
     }
@@ -58,8 +63,18 @@ export default class TelegramPlugin implements DistributorPlugin {
   }
 
   private async sendMessage(text: string): Promise<void> {
-    const messageData: Record<string, any> = {
-      chat_id: this.channelId || this.messageThreadId,
+    const chatId = this.channelId;
+    if (!chatId) {
+      throw new Error("No valid chat ID available");
+    }
+
+    const messageData: {
+      chat_id: string;
+      text: string;
+      parse_mode: string;
+      message_thread_id?: string;
+    } = {
+      chat_id: chatId,
       text,
       parse_mode: "HTML",
     };

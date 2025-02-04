@@ -1,4 +1,4 @@
-import { Plugin, TransformOptions } from "@curatedotfun/types";
+import { TransformerPlugin, ActionArgs } from "@curatedotfun/types";
 
 interface Message {
   role: "system" | "user" | "assistant";
@@ -13,24 +13,29 @@ interface OpenRouterResponse {
   }[];
 }
 
-export default class GPTTransformer implements Plugin {
-  name = "gpt_transform";
+interface AIConfig extends Record<string, string> {
+  prompt: string;
+  apiKey: string;
+}
+
+export default class AITransformer implements TransformerPlugin<string, string, AIConfig> {
+  name = "ai_transform";
   version = "0.0.1";
   private prompt: string = "";
   private apiKey: string = "";
 
-  async initialize(config: Record<string, string>): Promise<void> {
+  async initialize(config: AIConfig): Promise<void> {
     if (!config.prompt) {
-      throw new Error("GPT transformer requires a prompt configuration");
+      throw new Error("AI transformer requires a prompt configuration");
     }
     if (!config.apiKey) {
-      throw new Error("GPT transformer requires an OpenRouter API key");
+      throw new Error("AI transformer requires an OpenRouter API key");
     }
     this.prompt = config.prompt;
     this.apiKey = config.apiKey;
   }
 
-  async transform({ input }: TransformOptions): Promise<string> {
+  async transform({ input }: ActionArgs<string, AIConfig>): Promise<string> {
     try {
       const messages: Message[] = [
         { role: "system", content: this.prompt },
@@ -71,7 +76,7 @@ export default class GPTTransformer implements Plugin {
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
-      throw new Error(`GPT transformation failed: ${errorMessage}`);
+      throw new Error(`AI transformation failed: ${errorMessage}`);
     }
   }
 

@@ -7,7 +7,7 @@ module.exports = {
   target: "async-node",
   devtool: "source-map",
   output: {
-    uniqueName: "gpt_transform",
+    uniqueName: "ai-transform",
     publicPath: "auto",
     path: path.resolve(__dirname, "dist"),
     clean: true,
@@ -35,7 +35,7 @@ module.exports = {
   },
   plugins: [
     new rspack.container.ModuleFederationPlugin({
-      name: "gpt_transform",
+      name: "ai-transform",
       filename: "remoteEntry.js",
       runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
       library: { type: 'commonjs-module' },

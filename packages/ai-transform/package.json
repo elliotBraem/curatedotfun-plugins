@@ -1,7 +1,7 @@
 {
-  "name": "@curatedotfun/types",
+  "name": "@curatedotfun/ai-transform",
   "version": "0.0.1",
-  "description": "Type definitions for curatedotfun plugins",
+  "description": "AI transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
@@ -11,19 +11,25 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/potlock/curatedotfun-plugins.git",
-    "directory": "packages/types"
+    "directory": "packages/ai-transform"
   },
   "keywords": [
     "curatedotfun",
-    "types",
-    "typescript"
+    "ai",
+    "transform",
+    "plugin"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "rspack build",
+    "dev": "NODE_ENV=development rspack serve",
     "lint": "tsc --noEmit"
   },
+  "dependencies": {
+    "@curatedotfun/types": "workspace:*"
+  },
   "devDependencies": {
+    "@rspack/cli": "latest",
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   }
 }

@@ -1,9 +1,23 @@
 {
   "name": "@curatedotfun/simple-transform",
   "version": "0.0.1",
-  "private": true,
+  "description": "Simple transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/potlock/curatedotfun-plugins.git",
+    "directory": "packages/simple-transform"
+  },
+  "keywords": [
+    "curatedotfun",
+    "transform",
+    "plugin"
+  ],
   "scripts": {
     "build": "rspack build",
     "dev": "rspack serve",

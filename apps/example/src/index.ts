@@ -1,9 +1,6 @@
 import { PluginLoader } from "../../../packages/plugin-loader/src";
-import dotenv from "dotenv";
 
 async function main() {
-
-  dotenv.config();
   // Create a plugin loader instance
   // Reload plugins every minute in development
   const loader = new PluginLoader(60 * 1000);
@@ -40,7 +37,7 @@ async function main() {
 
     // Demonstrate cache and reload
     console.log("Loading plugin again (should use cache)...");
-    const cachedPlugin = await loader.loadPlugin("gpt_transform", {
+    const cachedPlugin = await loader.loadPlugin("gpt-transform", {
       url: "http://localhost:3002/remoteEntry.js",
       type: "transform",
       config: {
@@ -49,7 +46,7 @@ async function main() {
       }
     });
 
-    const r = await cachedPlugin.transform({
+    const r = cachedPlugin.transform({
       input: "Goodbye world"
     });
 

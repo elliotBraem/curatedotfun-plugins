@@ -1,9 +1,23 @@
 {
   "name": "@curatedotfun/plugin-loader",
   "version": "0.0.1",
-  "private": true,
+  "description": "Plugin loader for curatedotfun plugins",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/potlock/curatedotfun-plugins.git",
+    "directory": "packages/plugin-loader"
+  },
+  "keywords": [
+    "curatedotfun",
+    "plugin-loader",
+    "module-federation"
+  ],
   "scripts": {
     "build": "rspack build",
     "dev": "NODE_ENV=development rspack serve",

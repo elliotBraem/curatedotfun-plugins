@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/notion",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Notion plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,10 +25,10 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@curatedotfun/types": "workspace:*",
     "@notionhq/client": "^2.2.15"
   },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "typescript": "^5.0.0"
   }

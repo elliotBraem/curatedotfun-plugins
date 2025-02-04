@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/rss",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "RSS plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,10 +24,8 @@
     "dev": "rspack serve",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@curatedotfun/types": "workspace:*"
-  },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/supabase",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Supabase plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,10 +25,10 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@curatedotfun/types": "workspace:*",
     "@supabase/supabase-js": "^2.48.1"
   },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "typescript": "^5.0.0"
   }

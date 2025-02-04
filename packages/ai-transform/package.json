@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/ai-transform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AI transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,10 +24,8 @@
     "dev": "NODE_ENV=development rspack serve",
     "lint": "tsc --noEmit"
   },
-  "dependencies": {
-    "@curatedotfun/types": "workspace:*"
-  },
   "devDependencies": {
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"

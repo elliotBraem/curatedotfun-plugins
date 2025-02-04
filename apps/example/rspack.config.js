@@ -44,7 +44,7 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "host",
       filename: "remoteEntry.js",
-      remoteType: 'script',
+      remoteType: "script",
       isServer: true,
       useRuntimePlugin: true,
       shared: {

@@ -7,7 +7,9 @@ interface TelegramConfig {
   [key: string]: string | undefined;
 }
 
-export default class TelegramPlugin implements DistributorPlugin<string, TelegramConfig> {
+export default class TelegramPlugin
+  implements DistributorPlugin<string, TelegramConfig>
+{
   name = "telegram";
   version = "0.0.1";
   private botToken: string | null = null;
@@ -48,7 +50,9 @@ export default class TelegramPlugin implements DistributorPlugin<string, Telegra
     }
   }
 
-  async distribute({ input: content }: ActionArgs<string, TelegramConfig>): Promise<void> {
+  async distribute({
+    input: content,
+  }: ActionArgs<string, TelegramConfig>): Promise<void> {
     if (!this.botToken || (!this.channelId && !this.messageThreadId)) {
       throw new Error("Telegram plugin not initialized");
     }

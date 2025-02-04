@@ -1,6 +1,11 @@
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
-import { DistributorPlugin, DBOperations, RssItem, ActionArgs } from "@curatedotfun/types";
+import {
+  DistributorPlugin,
+  DBOperations,
+  RssItem,
+  ActionArgs,
+} from "@curatedotfun/types";
 import { RssService } from "./rss.service";
 
 interface RssConfig {
@@ -47,7 +52,10 @@ export default class RssPlugin implements DistributorPlugin<string, RssConfig> {
     this.services.set(config.feedId, service);
   }
 
-  async distribute({ input: content, config }: ActionArgs<string, RssConfig>): Promise<void> {
+  async distribute({
+    input: content,
+    config,
+  }: ActionArgs<string, RssConfig>): Promise<void> {
     if (!config?.feedId) {
       throw new Error("RSS plugin requires feedId in config");
     }

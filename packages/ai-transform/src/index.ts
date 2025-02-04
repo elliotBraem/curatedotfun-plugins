@@ -18,7 +18,9 @@ interface AIConfig extends Record<string, string> {
   apiKey: string;
 }
 
-export default class AITransformer implements TransformerPlugin<string, string, AIConfig> {
+export default class AITransformer
+  implements TransformerPlugin<string, string, AIConfig>
+{
   name = "ai_transform";
   version = "0.0.1";
   private prompt: string = "";

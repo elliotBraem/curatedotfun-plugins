@@ -7,7 +7,9 @@ interface NotionConfig {
   [key: string]: string;
 }
 
-export default class NotionPlugin implements DistributorPlugin<string, NotionConfig> {
+export default class NotionPlugin
+  implements DistributorPlugin<string, NotionConfig>
+{
   name = "notion";
   version = "0.0.1";
   private client: Client | null = null;
@@ -28,7 +30,7 @@ export default class NotionPlugin implements DistributorPlugin<string, NotionCon
     try {
       // Validate credentials by attempting to query the database
       await this.client.databases.retrieve({
-        database_id: this.databaseId
+        database_id: this.databaseId,
       });
     } catch (error) {
       console.error("Failed to initialize Notion plugin:", error);
@@ -36,7 +38,9 @@ export default class NotionPlugin implements DistributorPlugin<string, NotionCon
     }
   }
 
-  async distribute({ input: content }: ActionArgs<string, NotionConfig>): Promise<void> {
+  async distribute({
+    input: content,
+  }: ActionArgs<string, NotionConfig>): Promise<void> {
     if (!this.client || !this.databaseId) {
       throw new Error("Notion plugin not initialized");
     }

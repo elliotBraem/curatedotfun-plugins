@@ -13,7 +13,10 @@ interface SimpleTransformerConfig {
   [key: string]: string | undefined;
 }
 
-export default class SimpleTransformer implements TransformerPlugin<TwitterSubmission, string, SimpleTransformerConfig> {
+export default class SimpleTransformer
+  implements
+    TransformerPlugin<TwitterSubmission, string, SimpleTransformerConfig>
+{
   name = "simple-transform";
   version = "0.0.1";
   private format: string = "{CONTENT}"; // Default format if none provided
@@ -24,7 +27,9 @@ export default class SimpleTransformer implements TransformerPlugin<TwitterSubmi
     }
   }
 
-  async transform({ input }: ActionArgs<TwitterSubmission, SimpleTransformerConfig>): Promise<string> {
+  async transform({
+    input,
+  }: ActionArgs<TwitterSubmission, SimpleTransformerConfig>): Promise<string> {
     try {
       const submission = input;
       let result = this.format;

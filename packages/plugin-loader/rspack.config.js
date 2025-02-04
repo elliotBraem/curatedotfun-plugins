@@ -44,9 +44,11 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "plugin_loader",
       filename: "remoteEntry.js",
-      runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
+      runtimePlugins: [
+        require.resolve("@module-federation/node/runtimePlugin"),
+      ],
       exposes: {
-        './plugin': './src/index.ts',
+        "./plugin": "./src/index.ts",
       },
       shared: {
         "@curatedotfun/types": {

@@ -8,7 +8,9 @@ interface SupabaseConfig {
   [key: string]: string;
 }
 
-export default class SupabasePlugin implements DistributorPlugin<string, SupabaseConfig> {
+export default class SupabasePlugin
+  implements DistributorPlugin<string, SupabaseConfig>
+{
   name = "supabase";
   version = "0.0.1";
   private client: SupabaseClient | null = null;
@@ -35,7 +37,7 @@ export default class SupabasePlugin implements DistributorPlugin<string, Supabas
         .from(this.tableName)
         .select("*")
         .limit(1);
-      
+
       if (error) {
         throw error;
       }
@@ -45,7 +47,9 @@ export default class SupabasePlugin implements DistributorPlugin<string, Supabas
     }
   }
 
-  async distribute({ input: content }: ActionArgs<string, SupabaseConfig>): Promise<void> {
+  async distribute({
+    input: content,
+  }: ActionArgs<string, SupabaseConfig>): Promise<void> {
     if (!this.client || !this.tableName) {
       throw new Error("Supabase plugin not initialized");
     }
@@ -63,12 +67,10 @@ export default class SupabasePlugin implements DistributorPlugin<string, Supabas
       throw new Error("Supabase plugin not initialized");
     }
 
-    const { error } = await this.client
-      .from(this.tableName)
-      .insert({
-        content,
-        created_at: new Date().toISOString(),
-      });
+    const { error } = await this.client.from(this.tableName).insert({
+      content,
+      created_at: new Date().toISOString(),
+    });
 
     if (error) {
       throw error;

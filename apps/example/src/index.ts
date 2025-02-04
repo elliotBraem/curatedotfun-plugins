@@ -7,30 +7,30 @@ async function main() {
 
   try {
     // Load transform plugin
-    const gptTransform = await loader.loadPlugin("ai-transform", {
+    const gptTransform = (await loader.loadPlugin("ai-transform", {
       url: "http://localhost:3002/remoteEntry.js",
       type: "transform",
       config: {
         prompt: "Transform the greeting into a farewell",
-        apiKey: process.env.OPENROUTER_API_KEY!
-      }
-    }) as any;
+        apiKey: process.env.OPENROUTER_API_KEY!,
+      },
+    })) as any;
 
     // Transform some content
     const result = await gptTransform.transform({
-      input: "Hello world"
+      input: "Hello world",
     });
     console.log("Transform result:", result);
 
     // Load distributor plugin
-    const telegram = await loader.loadPlugin("telegram", {
+    const telegram = (await loader.loadPlugin("telegram", {
       url: "http://localhost:3003/remoteEntry.js", // Different port for each plugin
       type: "distributor",
       config: {
         botToken: process.env.TELEGRAM_BOT_TOKEN!,
-        channelId: process.env.TELEGRAM_CHANNEL_ID!
-      }
-    }) as any;
+        channelId: process.env.TELEGRAM_CHANNEL_ID!,
+      },
+    })) as any;
 
     // Distribute content
     await telegram.distribute("feed-1", "Content to distribute");
@@ -42,12 +42,12 @@ async function main() {
       type: "transform",
       config: {
         prompt: "Say a greeting back",
-        apiKey: process.env.OPENROUTER_API_KEY!
-      }
+        apiKey: process.env.OPENROUTER_API_KEY!,
+      },
     });
 
     const r = cachedPlugin.transform({
-      input: "Goodbye world"
+      input: "Goodbye world",
     });
 
     console.log("Second Transform", r);
@@ -55,7 +55,6 @@ async function main() {
     // Force reload all plugins
     console.log("Reloading all plugins...");
     await loader.reloadAll();
-
   } catch (error) {
     console.error("Error in example:", error);
   }

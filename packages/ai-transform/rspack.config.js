@@ -37,8 +37,10 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "ai-transform",
       filename: "remoteEntry.js",
-      runtimePlugins: [require.resolve('@module-federation/node/runtimePlugin')],
-      library: { type: 'commonjs-module' },
+      runtimePlugins: [
+        require.resolve("@module-federation/node/runtimePlugin"),
+      ],
+      library: { type: "commonjs-module" },
       exposes: {
         "./plugin": "./src/index.ts",
       },

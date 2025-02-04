@@ -5,6 +5,8 @@
 "@curatedotfun/types": patch
 "@curatedotfun/rss": patch
 "@curatedotfun/ai-transform": patch
+"@curatedotfun/supabase": patch
+"@curatedotfun/notion": patch
 ---
 
 initial publish

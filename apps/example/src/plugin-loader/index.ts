@@ -1,20 +1,20 @@
 import { loadRemote, init } from "@module-federation/runtime";
 import { performReload, revalidate } from "@module-federation/node/utils";
-import { 
-  BotPlugin, 
-  PluginType, 
-  PluginTypeMap, 
-  PluginConfig, 
-  PluginCache 
+import {
+  BotPlugin,
+  PluginType,
+  PluginTypeMap,
+  PluginConfig,
+  PluginCache,
 } from "@curatedotfun/types";
 
 /**
  * PluginLoader handles the dynamic loading and caching of bot plugins.
- * 
+ *
  * @example
  * ```typescript
  * const loader = new PluginLoader();
- * 
+ *
  * // Load a transformer plugin
  * const transformer = await loader.loadPlugin<
  *   "transform",    // plugin type
@@ -26,7 +26,7 @@ import {
  *   url: "http://localhost:3000/remoteEntry.js",
  *   config: { apiKey: `${process.env.API_KEY}` }
  * });
- * 
+ *
  * // Load a distributor plugin
  * const distributor = await loader.loadPlugin<
  *   "distributor",  // plugin type
@@ -43,11 +43,11 @@ import {
 export class PluginLoader {
   /**
    * Cache for loaded plugin instances.
-   * 
+   *
    * The cache uses a generic BotPlugin type to store instances, which are then
    * cast back to their specific types (TransformerPlugin/DistributorPlugin/etc) when retrieved.
    * We cache the plugin instance along with whatever specific config (__config)
-   * 
+   *
    * @private
    */
   private pluginCache: Map<
@@ -65,7 +65,7 @@ export class PluginLoader {
 
   /**
    * Creates a new PluginLoader instance.
-   * 
+   *
    * @param reloadInterval - Time in milliseconds before cached plugins are reloaded (default: 5 minutes)
    */
   constructor(reloadInterval: number = 5 * 60 * 1000) {
@@ -74,7 +74,7 @@ export class PluginLoader {
 
   /**
    * Initializes Module Federation for a plugin.
-   * 
+   *
    * @param name - Unique identifier for the plugin
    * @param remoteUrl - URL where the plugin is hosted
    * @private
@@ -94,43 +94,47 @@ export class PluginLoader {
 
   /**
    * Loads a plugin dynamically using Module Federation.
-   * 
+   *
    * @template T - The type of plugin ("transform" | "distributor")
    * @template TInput - The type of data the plugin accepts as input
    * @template TOutput - For transform plugins, the type of data returned. For distributor plugins, use 'never'
    * @template TConfig - The configuration object type for the plugin
-   * 
+   *
    * @param name - Unique identifier for the plugin
    * @param pluginConfig - Plugin configuration including URL and type-safe config object
    * @returns A promise that resolves to the loaded plugin instance
-   * 
+   *
    * @example
    * // Transform plugin that converts string to number
    * const numberify = await loadPlugin<"transform", string, number>(...);
    * const result = await numberify.transform({ input: "42" });
-   * 
+   *
    * @example
    * // Distributor plugin that sends strings to a webhook
    * const webhook = await loadPlugin<"distributor", string>(...);
    * await webhook.distribute({ input: "Hello" });
-   * 
+   *
    * @throws {Error} If the plugin cannot be loaded or initialized
    */
   async loadPlugin<
     T extends PluginType,
     TInput = unknown,
     TOutput = unknown,
-    TConfig extends Record<string, unknown> = Record<string, unknown>
+    TConfig extends Record<string, unknown> = Record<string, unknown>,
   >(
     name: string,
-    pluginConfig: PluginConfig<T, TConfig>
+    pluginConfig: PluginConfig<T, TConfig>,
   ): Promise<PluginTypeMap<TInput, TOutput, TConfig>[T]> {
     const cached = this.pluginCache.get(name);
     if (cached && this.isCacheValid(cached.lastLoaded)) {
       // Cast the cached instance back to its specific plugin type with config
       // We need to use unknown as an intermediate step because the cache stores a more generic type
-      return cached.instance as unknown as PluginTypeMap<TInput, TOutput, TConfig>[T] & { 
-        __config: PluginConfig<T, TConfig> 
+      return cached.instance as unknown as PluginTypeMap<
+        TInput,
+        TOutput,
+        TConfig
+      >[T] & {
+        __config: PluginConfig<T, TConfig>;
       };
     }
 
@@ -158,15 +162,17 @@ export class PluginLoader {
       await plugin.initialize(pluginConfig.config);
 
       // Attach the config to the plugin instance for reloading
-      const pluginWithConfig = Object.assign(plugin, { __config: pluginConfig });
-      
+      const pluginWithConfig = Object.assign(plugin, {
+        __config: pluginConfig,
+      });
+
       // Store in cache with a more generic type to avoid type conflicts
       // The specific types are restored when retrieving from cache
       this.pluginCache.set(name, {
-        instance: pluginWithConfig as BotPlugin<Record<string, unknown>> & { 
-          __config: PluginConfig<PluginType> 
+        instance: pluginWithConfig as BotPlugin<Record<string, unknown>> & {
+          __config: PluginConfig<PluginType>;
         },
-        lastLoaded: new Date()
+        lastLoaded: new Date(),
       });
 
       return plugin;
@@ -185,7 +191,7 @@ export class PluginLoader {
 
   /**
    * Checks if a cached plugin instance is still valid.
-   * 
+   *
    * @param lastLoaded - When the plugin was last loaded
    * @returns true if the cache is still valid, false if it needs to be reloaded
    * @private
@@ -206,7 +212,7 @@ export class PluginLoader {
   /**
    * Reloads all cached plugins if any remote changes are detected.
    * This is useful for development when plugin implementations change.
-   * 
+   *
    * @throws {Error} If any plugin fails to reload
    */
   async reloadAll(): Promise<void> {
@@ -222,10 +228,10 @@ export class PluginLoader {
           if (pluginConfig) {
             await this.loadPlugin(
               name,
-              pluginConfig as PluginConfig<PluginType, Record<string, unknown>>
+              pluginConfig as PluginConfig<PluginType, Record<string, unknown>>,
             );
           }
-        })
+        }),
       );
     }
   }

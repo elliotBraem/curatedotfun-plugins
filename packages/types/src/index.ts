@@ -1,5 +1,7 @@
 // Base plugin types
-export interface BotPlugin<TConfig extends Record<string, unknown> = Record<string, string>> {
+export interface BotPlugin<
+  TConfig extends Record<string, unknown> = Record<string, string>,
+> {
   name: string;
   version: string;
   initialize: (config: TConfig) => Promise<void>;
@@ -18,7 +20,7 @@ export interface ActionArgs<TInput = unknown, TConfig = unknown> {
 // Plugin configuration
 export interface PluginConfig<
   T extends PluginType,
-  TConfig extends Record<string, unknown> = Record<string, unknown>
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
 > {
   url: string;
   type: T;
@@ -27,9 +29,9 @@ export interface PluginConfig<
 
 // Plugin type mapping
 export type PluginTypeMap<
-  TInput = unknown, 
+  TInput = unknown,
   TOutput = unknown,
-  TConfig extends Record<string, unknown> = Record<string, unknown>
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
 > = {
   transform: TransformerPlugin<TInput, TOutput, TConfig>;
   distributor: DistributorPlugin<TInput, TConfig>;
@@ -38,7 +40,7 @@ export type PluginTypeMap<
 // Specific plugin types
 export interface DistributorPlugin<
   TInput = unknown,
-  TConfig extends Record<string, unknown> = Record<string, unknown>
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
 > extends BotPlugin<TConfig> {
   distribute: (args: ActionArgs<TInput, TConfig>) => Promise<void>;
 }
@@ -46,14 +48,16 @@ export interface DistributorPlugin<
 export interface TransformerPlugin<
   TInput = unknown, // input type
   TOutput = unknown, // return type
-  TConfig extends Record<string, unknown> = Record<string, unknown>
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
 > extends BotPlugin<TConfig> {
   transform: (args: ActionArgs<TInput, TConfig>) => Promise<TOutput>;
 }
 
 // Plugin loader types (helper for caching a plugin instance)
 export interface PluginCache<T extends PluginType, TPlugin extends BotPlugin> {
-  instance: TPlugin & { __config: PluginConfig<T, TPlugin extends BotPlugin<infer C> ? C : never> };
+  instance: TPlugin & {
+    __config: PluginConfig<T, TPlugin extends BotPlugin<infer C> ? C : never>;
+  };
   lastLoaded: Date;
 }
 

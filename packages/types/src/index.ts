@@ -1,6 +1,6 @@
 // Base plugin types
 export interface BotPlugin<
-  TConfig extends Record<string, unknown> = Record<string, string>,
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
 > {
   name: string;
   version: string;

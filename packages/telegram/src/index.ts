@@ -57,6 +57,8 @@ export default class TelegramPlugin
       throw new Error("Telegram plugin not initialized");
     }
 
+    console.log("got content", content);
+
     const message = this.formatMessage(content);
     await this.sendMessage(message);
   }

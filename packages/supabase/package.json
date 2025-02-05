@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/supabase",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "description": "Supabase plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,7 +20,7 @@
     "plugin"
   ],
   "scripts": {
-    "build": "rspack build",
+    "build": "rspack build && tsc -p tsconfig.build.json",
     "dev": "rspack serve",
     "lint": "tsc --noEmit"
   },

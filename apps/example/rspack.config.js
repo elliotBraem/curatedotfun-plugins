@@ -14,21 +14,6 @@ module.exports = {
     library: { type: "commonjs-module" },
   },
   module: {
-    // noParse: /yargs/,
-    // rules: [
-    //   {
-    //     test: /\.tsx?$/,
-    //     use: [
-    //       {
-    //         loader: 'ts-loader',
-    //         options: {
-    //           transpileOnly: false, // Enables type-checking and .d.ts file emission
-    //         },
-    //       },
-    //     ],
-    //     exclude: /node_modules/,
-    //   },
-    // ],
     rules: [
       {
         test: /\.tsx?$/,
@@ -44,9 +29,9 @@ module.exports = {
     new rspack.container.ModuleFederationPlugin({
       name: "host",
       filename: "remoteEntry.js",
-      remoteType: "script",
-      isServer: true,
-      useRuntimePlugin: true,
+      runtimePlugins: [
+        require.resolve("@module-federation/node/runtimePlugin"),
+      ],
       shared: {
         "@curatedotfun/types": {
           singleton: true,

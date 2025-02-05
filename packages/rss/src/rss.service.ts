@@ -15,9 +15,9 @@ export class RssService {
     this.dbOps.deleteOldRssItems(this.feedId, this.maxItems);
   }
 
-  getItems(limit?: number): RssItem[] {
+  async getItems(limit?: number): Promise<RssItem[]> {
     if (!this.dbOps) return [];
-    return this.dbOps.getRssItems(this.feedId, limit || this.maxItems);
+    return await this.dbOps.getRssItems(this.feedId, limit || this.maxItems);
   }
 
   getTitle(): string {

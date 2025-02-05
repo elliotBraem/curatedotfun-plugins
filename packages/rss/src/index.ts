@@ -86,7 +86,7 @@ export default class RssPlugin implements DistributorPlugin<string, RssConfig> {
     service: RssService,
     filePath: string,
   ): Promise<void> {
-    const items = service.getItems();
+    const items = await service.getItems();
 
     const feed = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">

@@ -1,3 +1,36 @@
+// Available plugins
+const AVAILABLE_PLUGINS = {
+    transform: ['simple-transform', 'ai-transform'],
+    distribute: ['notion', 'telegram', 'rss', 'supabase']
+};
+
+// Plugin default configurations
+const PLUGIN_DEFAULTS = {
+    'simple-transform': {
+        format: "🚀 {CONTENT} #automated"
+    },
+    'ai-transform': {
+        prompt: "Transform this into an engaging social media post",
+        apiKey: "{OPENROUTER_API_KEY}"
+    },
+    'notion': {
+        token: "{NOTION_TOKEN}",
+        databaseId: "your-database-id"
+    },
+    'telegram': {
+        botToken: "{TELEGRAM_BOT_TOKEN}",
+        channelId: "@your_channel"
+    },
+    'rss': {
+        url: "https://example.com/feed.xml"
+    },
+    'supabase': {
+        url: "{SUPABASE_URL}",
+        key: "{SUPABASE_KEY}",
+        table: "your-table-name"
+    }
+};
+
 // Default configuration
 const DEFAULT_CONFIG = {
     transform: [
@@ -43,6 +76,180 @@ const distributeBtn = document.getElementById('distribute');
 const configStatus = document.getElementById('configStatus');
 const distributeStatus = document.getElementById('distributeStatus');
 const transformStatus = document.getElementById('transformStatus');
+const viewToggle = document.getElementById('viewToggle');
+const jsonView = document.getElementById('jsonView');
+const configView = document.getElementById('configView');
+
+// Configuration view elements
+const transformPluginList = document.getElementById('transformPluginList');
+const distributePluginList = document.getElementById('distributePluginList');
+
+let currentView = 'json'; // 'json' or 'config'
+
+// Toggle between JSON and Config views
+function toggleView() {
+    currentView = currentView === 'json' ? 'config' : 'json';
+    jsonView.style.display = currentView === 'json' ? 'block' : 'none';
+    configView.style.display = currentView === 'config' ? 'block' : 'none';
+    viewToggle.textContent = `Switch to ${currentView === 'json' ? 'Config' : 'JSON'} View`;
+    
+    if (currentView === 'config') {
+        updateConfigView();
+    } else {
+        updateJsonView();
+    }
+}
+
+// Update the configuration view based on the current JSON
+function updateConfigView() {
+    try {
+        const config = JSON.parse(configEditor.value);
+        
+        // Clear existing plugin lists
+        transformPluginList.innerHTML = '';
+        distributePluginList.innerHTML = '';
+        
+        // Add transform plugins
+        if (config.transform && Array.isArray(config.transform)) {
+            config.transform.forEach((transform, index) => {
+                addPluginToList('transform', transform, index);
+            });
+        }
+        
+        // Add distribute plugins
+        if (config.distribute && Array.isArray(config.distribute)) {
+            config.distribute.forEach((distribute, index) => {
+                addPluginToList('distribute', distribute, index);
+            });
+        }
+    } catch (error) {
+        updateConfigStatus('Failed to parse JSON configuration', 'error');
+    }
+}
+
+// Add a plugin configuration to the appropriate list
+function addPluginToList(type, plugin, index) {
+    const list = type === 'transform' ? transformPluginList : distributePluginList;
+    const div = document.createElement('div');
+    div.className = 'plugin-item';
+    
+    // Plugin header with select and remove button
+    const header = document.createElement('div');
+    header.className = 'plugin-header';
+
+    const selectGroup = document.createElement('div');
+    selectGroup.className = 'plugin-select-group';
+    
+    const nameLabel = document.createElement('label');
+    nameLabel.className = 'form-label';
+    nameLabel.textContent = 'Plugin Name';
+    
+    // Plugin selection dropdown
+    const select = document.createElement('select');
+    AVAILABLE_PLUGINS[type].forEach(pluginName => {
+        const option = document.createElement('option');
+        option.value = pluginName;
+        option.textContent = pluginName;
+        option.selected = pluginName === plugin.plugin;
+        select.appendChild(option);
+    });
+    
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+        div.remove();
+        updateJsonFromConfig();
+    };
+    
+    // Config section
+    const configGroup = document.createElement('div');
+    const configLabel = document.createElement('label');
+    configLabel.className = 'form-label';
+    configLabel.textContent = 'Plugin Configuration';
+    
+    const textarea = document.createElement('textarea');
+    textarea.className = 'plugin-config';
+    textarea.value = JSON.stringify(plugin.config, null, 2);
+    
+    // Event listeners
+    select.onchange = () => {
+        textarea.value = JSON.stringify(PLUGIN_DEFAULTS[select.value], null, 2);
+        updateJsonFromConfig();
+    };
+    
+    textarea.oninput = updateJsonFromConfig;
+    
+    // Assemble the components
+    selectGroup.appendChild(nameLabel);
+    selectGroup.appendChild(select);
+    
+    header.appendChild(selectGroup);
+    header.appendChild(removeBtn);
+    
+    configGroup.appendChild(configLabel);
+    configGroup.appendChild(textarea);
+    
+    div.appendChild(header);
+    div.appendChild(configGroup);
+    list.appendChild(div);
+}
+
+// Add new plugin button handler
+function addNewPlugin(type) {
+    const defaultPlugin = AVAILABLE_PLUGINS[type][0];
+    const pluginConfig = {
+        plugin: defaultPlugin,
+        config: PLUGIN_DEFAULTS[defaultPlugin]
+    };
+    addPluginToList(type, pluginConfig, type === 'transform' ? transformPluginList.children.length : distributePluginList.children.length);
+    updateJsonFromConfig();
+}
+
+// Update JSON view based on the configuration view
+function updateJsonFromConfig() {
+    const config = {
+        transform: [],
+        distribute: []
+    };
+    
+    // Collect transform plugins
+    Array.from(transformPluginList.children).forEach(div => {
+        const select = div.querySelector('select');
+        const textarea = div.querySelector('textarea');
+        try {
+            config.transform.push({
+                plugin: select.value,
+                config: JSON.parse(textarea.value)
+            });
+        } catch (error) {
+            console.error('Invalid JSON in transform config:', error);
+        }
+    });
+    
+    // Collect distribute plugins
+    Array.from(distributePluginList.children).forEach(div => {
+        const select = div.querySelector('select');
+        const textarea = div.querySelector('textarea');
+        try {
+            config.distribute.push({
+                plugin: select.value,
+                config: JSON.parse(textarea.value)
+            });
+        } catch (error) {
+            console.error('Invalid JSON in distribute config:', error);
+        }
+    });
+    
+    configEditor.value = JSON.stringify(config, null, 2);
+    updateConfigStatus('Configuration updated', 'success');
+    updateTransformButton();
+}
+
+// Update JSON view
+function updateJsonView() {
+    // No need to do anything special here as the JSON is always kept up to date
+}
 
 // Update transform button state
 function updateTransformButton() {
@@ -228,6 +435,13 @@ configEditor.addEventListener('input', () => {
     }
 });
 
+// Event Listeners
+viewToggle.addEventListener('click', toggleView);
+
+document.getElementById('addTransformPlugin').addEventListener('click', () => addNewPlugin('transform'));
+document.getElementById('addDistributePlugin').addEventListener('click', () => addNewPlugin('distribute'));
+
 // Initialize
 loadConfig();
 updateTransformButton();
+toggleView(); // Start in config view

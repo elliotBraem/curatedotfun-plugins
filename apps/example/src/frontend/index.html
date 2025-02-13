@@ -26,6 +26,11 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .config-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
         #configEditor {
             width: 100%;
             height: 300px;
@@ -79,37 +84,89 @@
             font-family: monospace;
             white-space: pre-wrap;
         }
+        .plugin-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .plugin-list {
+            margin-top: 1rem;
+        }
+        .plugin-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .plugin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .plugin-select-group {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        .plugin-config {
+            width: 100%;
+            height: 120px;
+            font-family: monospace;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+        }
         .transform-buttons {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
-        .transform-button {
-            background: #9c27b0;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .transform-button:hover {
-            background: #7b1fa2;
-        }
-        .transform-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div class="config-section">
         <h2>Plugin Configuration</h2>
-        <textarea id="configEditor" spellcheck="false"></textarea>
-        <div>
+        <div class="config-controls">
+            <button id="viewToggle" class="button" style="background: #4CAF50">Switch View</button>
             <button id="saveConfig" class="button">Save Configuration</button>
             <button id="resetConfig" class="button" style="background: #f44336">Reset</button>
         </div>
+        
+        <div id="jsonView">
+            <textarea id="configEditor" spellcheck="false"></textarea>
+        </div>
+        
+        <div id="configView" style="display: none">
+            <div class="plugin-section">
+                <h3>Transform Plugins</h3>
+                <button id="addTransformPlugin" class="button" style="background: #9c27b0">Add Transform Plugin</button>
+                <div id="transformPluginList" class="plugin-list"></div>
+            </div>
+            
+            <div class="plugin-section">
+                <h3>Distribution Plugins</h3>
+                <button id="addDistributePlugin" class="button" style="background: #2196F3">Add Distribution Plugin</button>
+                <div id="distributePluginList" class="plugin-list"></div>
+            </div>
+        </div>
+        
         <div id="configStatus" class="status"></div>
     </div>
     <div class="content-panel">

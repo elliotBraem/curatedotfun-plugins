@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Manager</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .config-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #configEditor {
+            width: 100%;
+            height: 500px;
+            font-family: monospace;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 1rem 0;
+            resize: vertical;
+        }
+        .button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        .button:hover {
+            background: #1976D2;
+        }
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: #f44336;
+            margin-top: 1rem;
+        }
+        .success {
+            color: #4CAF50;
+            margin-top: 1rem;
+        }
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #e0e0e0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="config-section">
+        <h2>Plugin Configuration</h2>
+        <textarea id="configEditor" spellcheck="false"></textarea>
+        <div>
+            <button id="saveConfig" class="button">Save Configuration</button>
+            <button id="resetConfig" class="button" style="background: #f44336">Reset</button>
+        </div>
+        <div id="configStatus" class="status"></div>
+    </div>
+    <div class="config-section">
+        <h2>Distribution</h2>
+        <p>Click the button below to distribute content using the configured plugins.</p>
+        <button id="distribute" class="button">Distribute</button>
+        <div id="distributeStatus" class="status"></div>
+    </div>
+    <script src="frontend.js"></script>
+</body>
+</html>

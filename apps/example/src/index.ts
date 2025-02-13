@@ -1,78 +1,96 @@
 import "dotenv/config";
 import { PluginLoader } from "./plugin-loader";
-import { DistributorPlugin, TransformerPlugin } from "@curatedotfun/types";
+import { DistributorPlugin } from "@curatedotfun/types";
+import express from "express";
+import path from "path";
+
+const PLUGIN_PORTS: Record<string, number> = {
+  'notion': 3003,
+  'rss': 3004,
+  'supabase': 3006,
+  'telegram': 3007
+};
 
 async function main() {
-  // Create a plugin loader instance
-  // Reload plugins every minute in development
+  const app = express();
   const loader = new PluginLoader(60 * 1000);
+  
+  // Serve static frontend files
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.use(express.json());
 
-  try {
-    // Load transform plugin
-    const aiTransform = (await loader.loadPlugin("ai-transform", {
-      url: "http://localhost:3002/remoteEntry.js",
-      type: "transform",
-      config: {
-        prompt: "Transform the greeting into a farewell",
-        apiKey: process.env.OPENROUTER_API_KEY!,
-      },
-    })) as TransformerPlugin;
+  // Distribution endpoint
+  app.post('/api/distribute', async (req, res) => {
+    try {
+      const config = req.body;
+      
+      if (!config.distribute || !Array.isArray(config.distribute)) {
+        throw new Error('Invalid configuration: missing or invalid distribute array');
+      }
 
-    // Transform some content
-    const result = await aiTransform.transform({
-      input: "Hello world",
-    });
-    console.log("Transform result:", result);
+      // Clear existing plugins
+      await loader.reloadAll();
+      
+      // Load and configure plugins
+      const loadedPlugins: DistributorPlugin[] = [];
+      
+      for (const pluginConfig of config.distribute) {
+        const port = PLUGIN_PORTS[pluginConfig.plugin];
+        if (!port) {
+          console.warn(`Unknown plugin: ${pluginConfig.plugin}`);
+          continue;
+        }
 
-    // Load distributor plugin
-    const telegram = (await loader.loadPlugin("telegram", {
-      url: "http://localhost:3007/remoteEntry.js", // Different port for each plugin
-      type: "distributor",
-      config: {
-        botToken: process.env.TELEGRAM_BOT_TOKEN!,
-        channelId: process.env.TELEGRAM_CHANNEL_ID!,
-      },
-    })) as DistributorPlugin;
+        try {
+          const plugin = await loader.loadPlugin(
+            pluginConfig.plugin,
+            {
+              url: `http://localhost:${port}/remoteEntry.js`,
+              type: 'distributor',
+              config: pluginConfig.config
+            }
+          ) as DistributorPlugin;
+          
+          loadedPlugins.push(plugin);
+          console.log(`Loaded plugin: ${pluginConfig.plugin}`);
+        } catch (error) {
+          console.error(`Failed to load plugin ${pluginConfig.plugin}:`, error);
+          throw new Error(`Failed to load plugin ${pluginConfig.plugin}`);
+        }
+      }
 
-    // Distribute content
-    await telegram.distribute({ input: "Content to distribute" });
+      // Distribute to all loaded plugins
+      const results = await Promise.all(
+        loadedPlugins.map(async (plugin, index) => {
+          const pluginName = config.distribute[index].plugin;
+          try {
+            await plugin.distribute({ input: "Test distribution" });
+            return { plugin: pluginName, status: 'success' };
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            console.error(`Distribution failed for plugin ${pluginName}:`, error);
+            return { plugin: pluginName, status: 'error', error: errorMessage };
+          }
+        })
+      );
 
-    // Demonstrate cache and reload
-    console.log("Loading plugin again (should use cache)...");
-    const cachedPlugin = await loader.loadPlugin("ai-transform", {
-      url: "http://localhost:3002/remoteEntry.js",
-      type: "transform",
-      config: {
-        prompt: "Say a greeting back",
-        apiKey: process.env.OPENROUTER_API_KEY!,
-      },
-    });
+      res.json({ success: true, results });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Distribution failed';
+      console.error('Error in distribution:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: errorMessage
+      });
+    }
+  });
 
-    const r = await cachedPlugin.transform({
-      input: "Goodbye world",
-    });
-
-    console.log("Second Transform", r);
-
-    // Force reload all plugins
-    console.log("Reloading all plugins...");
-    await loader.reloadAll();
-  } catch (error) {
-    console.error("Error in example:", error);
-  }
+  // Start server
+  const port = 3000;
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
 }
 
-// Run the example
+// Run the server
 main().catch(console.error);
-
-/*
-To run this example:
-1. Start the ai-transform plugin:
-   cd packages/ai-transform && bun run dev
-
-2. Start the telegram plugin:
-   cd packages/telegram && bun run dev
-
-3. Run this example:
-   bun run start
-*/

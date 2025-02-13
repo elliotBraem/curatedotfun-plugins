@@ -7,12 +7,17 @@
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 2rem;
             background: #f5f5f5;
             display: grid;
             grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .content-panel {
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
         }
         .config-section {
@@ -23,7 +28,17 @@
         }
         #configEditor {
             width: 100%;
-            height: 500px;
+            height: 300px;
+            font-family: monospace;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 1rem 0;
+            resize: vertical;
+        }
+        #contentEditor {
+            width: 100%;
+            height: 100px;
             font-family: monospace;
             padding: 1rem;
             border: 1px solid #ccc;
@@ -64,6 +79,27 @@
             font-family: monospace;
             white-space: pre-wrap;
         }
+        .transform-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .transform-button {
+            background: #9c27b0;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .transform-button:hover {
+            background: #7b1fa2;
+        }
+        .transform-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -76,11 +112,20 @@
         </div>
         <div id="configStatus" class="status"></div>
     </div>
-    <div class="config-section">
-        <h2>Distribution</h2>
-        <p>Click the button below to distribute content using the configured plugins.</p>
-        <button id="distribute" class="button">Distribute</button>
-        <div id="distributeStatus" class="status"></div>
+    <div class="content-panel">
+        <div class="config-section">
+            <h2>Content</h2>
+            <p>Enter your content below and use transform to modify it.</p>
+            <textarea id="contentEditor" spellcheck="false" placeholder="Enter your content here..."></textarea>
+            <button id="transform" class="button" style="background: #9c27b0">Transform Content</button>
+            <div id="transformStatus" class="status"></div>
+        </div>
+        <div class="config-section">
+            <h2>Distribution</h2>
+            <p>Click the button below to distribute the transformed content using the configured plugins.</p>
+            <button id="distribute" class="button">Distribute</button>
+            <div id="distributeStatus" class="status"></div>
+        </div>
     </div>
     <script src="frontend.js"></script>
 </body>

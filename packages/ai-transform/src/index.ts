@@ -18,8 +18,12 @@ interface AIConfig extends Record<string, string> {
   apiKey: string;
 }
 
+interface TransformInput {
+  content: string;
+}
+
 export default class AITransformer
-  implements TransformerPlugin<string, string, AIConfig>
+  implements TransformerPlugin<TransformInput, string, AIConfig>
 {
   name = "ai_transform";
   version = "0.0.1";
@@ -37,11 +41,13 @@ export default class AITransformer
     this.apiKey = config.apiKey;
   }
 
-  async transform({ input }: ActionArgs<string, AIConfig>): Promise<string> {
+  async transform({
+    input,
+  }: ActionArgs<TransformInput, AIConfig>): Promise<string> {
     try {
       const messages: Message[] = [
         { role: "system", content: this.prompt },
-        { role: "user", content: input },
+        { role: "user", content: input.content }, // Extract content string from input object
       ];
 
       const response = await fetch(
@@ -55,7 +61,7 @@ export default class AITransformer
             "X-Title": "CurateDotFun",
           },
           body: JSON.stringify({
-            model: "openai/gpt-3.5-turbo", // Default to GPT-3.5-turbo for cost efficiency
+            model: "openai/gpt-3.5-turbo",
             messages,
             temperature: 0.7,
             max_tokens: 1000,
@@ -64,14 +70,16 @@ export default class AITransformer
       );
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`OpenRouter API error: ${error}`);
+        const errorText = await response.text();
+        throw new Error(
+          `OpenRouter API error (${response.status}): ${errorText}`,
+        );
       }
 
       const result = (await response.json()) as OpenRouterResponse;
 
       if (!result.choices?.[0]?.message?.content) {
-        throw new Error("Invalid response from OpenRouter API");
+        throw new Error("Invalid response structure from OpenRouter API");
       }
 
       return result.choices[0].message.content;

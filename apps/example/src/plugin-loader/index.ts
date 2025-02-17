@@ -235,4 +235,12 @@ export class PluginLoader {
       );
     }
   }
+
+  /**
+   * Gets the names of all currently loaded plugins.
+   * @returns Array of plugin names that are currently loaded and cached
+   */
+  getLoadedPlugins(): string[] {
+    return Array.from(this.pluginCache.keys());
+  }
 }

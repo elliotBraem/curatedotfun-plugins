@@ -1,0 +1,82 @@
+Plugin Loader Optimization Plan
+=============================
+
+1. Enhance Container Sharing & Scoping
+------------------------------------
+- Update initModuleFederation to use Module Federation's built-in features
+- Add singleton and eager loading configurations
+- Configure shared dependencies across plugins
+- Implement proper module scoping
+
+Code changes:
+```typescript
+init({
+  name: "host",
+  remotes: [{
+    name,
+    entry: remoteUrl,
+    scope: {
+      singleton: true,
+      eager: true,
+      shared: ['@curatedotfun/types']
+    }
+  }],
+  shared: {
+    '@curatedotfun/types': {
+      singleton: true,
+      eager: true
+    }
+  }
+});
+```
+
+2. Implement Smart Instance Management
+------------------------------------
+- Replace current pluginCache with more sophisticated pluginInstanceMap
+- Add config-based instance sharing
+- Implement container reuse for same-URL plugins
+- Add config comparison for smart cache invalidation
+
+Code changes:
+```typescript
+private pluginInstanceMap: Map<string, {
+  instance: BotPlugin<Record<string, unknown>>;
+  config: string;
+  container: any;
+}>;
+```
+
+3. Add Hot Module Replacement (HMR)
+---------------------------------
+- Set up HMR listeners in development mode
+- Implement selective instance clearing on updates
+- Add proper cleanup for stale instances
+- Configure module-specific update handling
+
+4. Optimize Plugin Reloading
+---------------------------
+- Group plugin reloads by URL
+- Minimize container reinitializations
+- Implement smart cache invalidation
+- Add proper cleanup for old instances
+
+5. Testing & Validation
+----------------------
+- Test memory usage improvements
+- Verify instance sharing works correctly
+- Validate HMR functionality
+- Check reload performance
+- Ensure backward compatibility
+
+6. Documentation Updates
+-----------------------
+- Document new caching behavior
+- Update API documentation
+- Add examples for different caching scenarios
+- Document development workflow with HMR
+
+Notes:
+- All changes should maintain type safety
+- Keep backward compatibility where possible
+- Focus on development experience improvements
+- Consider adding monitoring/metrics later

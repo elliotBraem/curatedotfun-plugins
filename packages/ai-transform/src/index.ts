@@ -41,7 +41,9 @@ export default class AITransformer
     this.apiKey = config.apiKey;
   }
 
-  async transform({ input }: ActionArgs<TransformInput, AIConfig>): Promise<string> {
+  async transform({
+    input,
+  }: ActionArgs<TransformInput, AIConfig>): Promise<string> {
     try {
       const messages: Message[] = [
         { role: "system", content: this.prompt },
@@ -69,7 +71,9 @@ export default class AITransformer
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`OpenRouter API error (${response.status}): ${errorText}`);
+        throw new Error(
+          `OpenRouter API error (${response.status}): ${errorText}`,
+        );
       }
 
       const result = (await response.json()) as OpenRouterResponse;

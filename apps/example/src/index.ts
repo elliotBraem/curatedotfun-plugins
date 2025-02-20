@@ -1,22 +1,14 @@
 import "dotenv/config";
-import { PluginLoader } from "./plugin-loader";
+import { PluginService } from "./plugin-service";
 import { DistributorPlugin, TransformerPlugin } from "@curatedotfun/types";
 import express from "express";
 import path from "path";
 import { hydrateConfigValues } from "./utils";
-
-const PLUGIN_PORTS: Record<string, number> = {
-  notion: 3003,
-  rss: 3004,
-  supabase: 3006,
-  telegram: 3007,
-  "simple-transform": 3005,
-  "ai-transform": 3002,
-};
+import { getPluginByName } from "./plugin-registry";
 
 async function main() {
   const app = express();
-  const loader = new PluginLoader(60 * 1000);
+  const pluginService = new PluginService(getPluginByName);
 
   // Serve static frontend files
   app.use(express.static(path.join(__dirname, "../dist")));
@@ -33,28 +25,23 @@ async function main() {
         );
       }
 
-      // Clear existing plugins
-      await loader.reloadAll();
-
       // Load and configure plugins
       const loadedPlugins: DistributorPlugin[] = [];
 
       for (const pluginConfig of config.distribute) {
-        const port = PLUGIN_PORTS[pluginConfig.plugin];
-        if (!port) {
-          console.warn(`Unknown plugin: ${pluginConfig.plugin}`);
-          continue;
-        }
+        console.log("pluginConfig.plugin", pluginConfig.plugin);
 
         try {
           // Hydrate config with environment variables
           const hydratedConfig = hydrateConfigValues(pluginConfig.config);
 
-          const plugin = (await loader.loadPlugin(pluginConfig.plugin, {
-            url: `http://localhost:${port}/remoteEntry.js`,
-            type: "distributor",
-            config: hydratedConfig,
-          })) as DistributorPlugin;
+          const plugin = await pluginService.getPlugin<"distributor">(
+            pluginConfig.plugin,
+            {
+              type: "distributor",
+              config: hydratedConfig,
+            }
+          );
 
           loadedPlugins.push(plugin);
           console.log(`Loaded plugin: ${pluginConfig.plugin}`);
@@ -110,20 +97,14 @@ async function main() {
         throw new Error("No content provided for transformation");
       }
 
-      const port = PLUGIN_PORTS[pluginName];
-      if (!port) {
-        throw new Error(`Unknown plugin: ${pluginName}`);
-      }
-
       // Hydrate config with environment variables
       const hydratedConfig = hydrateConfigValues(pluginConfig);
 
       // Load and configure transform plugin
-      const plugin = (await loader.loadPlugin(pluginName, {
-        url: `http://localhost:${port}/remoteEntry.js`,
+      const plugin = await pluginService.getPlugin<"transform">(pluginName, {
         type: "transform",
         config: hydratedConfig,
-      })) as TransformerPlugin;
+      });
 
       // Transform content
       const result = await plugin.transform({ input: content });
@@ -143,6 +124,12 @@ async function main() {
   const port = 3000;
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
+  });
+
+  // Cleanup plugins on exit
+  process.on("SIGINT", async () => {
+    await pluginService.cleanup();
+    process.exit(0);
   });
 }
 

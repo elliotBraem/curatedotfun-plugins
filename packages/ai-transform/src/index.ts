@@ -1,4 +1,4 @@
-import { TransformerPlugin, ActionArgs } from "@curatedotfun/types";
+import type { ActionArgs, TransformerPlugin } from "@curatedotfun/types";
 
 interface Message {
   role: "system" | "user" | "assistant";
@@ -25,12 +25,14 @@ interface TransformInput {
 export default class AITransformer
   implements TransformerPlugin<TransformInput, string, AIConfig>
 {
-  name = "ai_transform";
-  version = "0.0.1";
+  readonly type = "transform" as const;
   private prompt: string = "";
   private apiKey: string = "";
 
-  async initialize(config: AIConfig): Promise<void> {
+  async initialize(config?: AIConfig): Promise<void> {
+    if (!config) {
+      throw new Error("AI transformer requires configuration");
+    }
     if (!config.prompt) {
       throw new Error("AI transformer requires a prompt configuration");
     }

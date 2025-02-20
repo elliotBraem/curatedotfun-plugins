@@ -1,4 +1,4 @@
-import { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
+import type { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
 import { Client } from "@notionhq/client";
 
 interface NotionConfig {
@@ -10,13 +10,14 @@ interface NotionConfig {
 export default class NotionPlugin
   implements DistributorPlugin<string, NotionConfig>
 {
-  name = "notion";
-  version = "0.0.1";
+  readonly type = "distributor" as const;
   private client: Client | null = null;
   private databaseId: string | null = null;
 
-  async initialize(config: NotionConfig): Promise<void> {
-    // Validate required config
+  async initialize(config?: NotionConfig): Promise<void> {
+    if (!config) {
+      throw new Error("Notion plugin requires configuration");
+    }
     if (!config.token) {
       throw new Error("Notion plugin requires token");
     }

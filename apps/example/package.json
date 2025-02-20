@@ -6,14 +6,16 @@
     "start": "rspack build && node dist/main.js"
   },
   "devDependencies": {
-    "@module-federation/node": "^2.6.22",
+    "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "@types/node": "^20.0.0",
     "dotenv": "^16.4.7",
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@module-federation/node": "^2.6.22",
     "@types/express": "^5.0.0",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "@curatedotfun/utils": "workspace:*"
   }
 }

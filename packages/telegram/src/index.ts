@@ -1,4 +1,4 @@
-import { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
+import type { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
 
 interface TelegramConfig {
   botToken: string;
@@ -10,13 +10,16 @@ interface TelegramConfig {
 export default class TelegramPlugin
   implements DistributorPlugin<string, TelegramConfig>
 {
-  name = "telegram";
-  version = "0.0.1";
+  readonly type = "distributor" as const;
   private botToken: string | null = null;
   private channelId: string | null = null;
   private messageThreadId: string | null = null;
 
-  async initialize(config: TelegramConfig): Promise<void> {
+  async initialize(config?: TelegramConfig): Promise<void> {
+    if (!config) {
+      throw new Error("Telegram plugin requires configuration.");
+    }
+
     // Validate required config
     if (!config.botToken) {
       throw new Error("Telegram plugin requires botToken");
@@ -62,7 +65,12 @@ export default class TelegramPlugin
   }
 
   private formatMessage(content: string): string {
-    // TODO
+    // Format message for Telegram
+    // - Replace markdown with HTML tags
+    // - Escape special characters
+    // - Handle links and formatting
+
+    // For now, return as-is until specific formatting requirements are defined
     return content;
   }
 

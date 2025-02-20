@@ -85,7 +85,7 @@ const gptTransform = await loader.loadPlugin("gpt-transform", {
 });
 
 // Load a distributor plugin
-const telegram = await loader.loadPlugin("telegram", {
+const telegram = await loader.loadPlugin("@curatedotfun/telegram", {
   url: "http://localhost:3003/remoteEntry.js",
   type: "distributor",
   config: {

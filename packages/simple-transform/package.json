@@ -1,9 +1,17 @@
 {
   "name": "@curatedotfun/simple-transform",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Simple transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -25,6 +33,7 @@
   },
   "devDependencies": {
     "@curatedotfun/types": "workspace:*",
+    "@curatedotfun/utils": "workspace:*",
     "@rspack/cli": "latest",
     "typescript": "^5.0.0"
   }

@@ -1,15 +1,13 @@
-// Base plugin types
+export type PluginType = "transform" | "distributor";
+
+// Base plugin interface
 export interface BotPlugin<
   TConfig extends Record<string, unknown> = Record<string, unknown>,
 > {
-  name: string;
-  version: string;
-  initialize: (config: TConfig) => Promise<void>;
+  type: PluginType;
+  initialize: (config?: TConfig) => Promise<void>;
   shutdown?: () => Promise<void>;
 }
-
-// Plugin type discriminator
-export type PluginType = "transform" | "distributor";
 
 // Plugin action type (used by all plugins)
 export interface ActionArgs<TInput = unknown, TConfig = unknown> {
@@ -17,49 +15,49 @@ export interface ActionArgs<TInput = unknown, TConfig = unknown> {
   config?: TConfig;
 }
 
-// Plugin configuration
-export interface PluginConfig<
-  T extends PluginType,
-  TConfig extends Record<string, unknown> = Record<string, unknown>,
-> {
-  url: string;
-  type: T;
-  config: TConfig;
-}
-
-// Plugin type mapping
-export type PluginTypeMap<
+// Specific plugin interfaces
+export interface TransformerPlugin<
   TInput = unknown,
   TOutput = unknown,
   TConfig extends Record<string, unknown> = Record<string, unknown>,
+> extends BotPlugin<TConfig> {
+  type: "transform";
+  transform: (args: ActionArgs<TInput, TConfig>) => Promise<TOutput>;
+}
+
+export interface DistributorPlugin<
+  TInput = unknown,
+  TConfig extends Record<string, unknown> = Record<string, unknown>,
+> extends BotPlugin<TConfig> {
+  type: "distributor";
+  distribute: (args: ActionArgs<TInput, TConfig>) => Promise<void>;
+}
+
+/**
+ * Plugin configuration
+ */
+export interface PluginConfig<
+  T extends PluginType,
+  TConfig = Record<string, unknown>,
+> {
+  type: T;
+  url: string;
+  config?: TConfig;
+}
+
+/**
+ * Plugin type mapping
+ */
+export type PluginTypeMap<
+  TInput,
+  TOutput,
+  TConfig extends Record<string, unknown>,
 > = {
   transform: TransformerPlugin<TInput, TOutput, TConfig>;
   distributor: DistributorPlugin<TInput, TConfig>;
 };
 
-// Specific plugin types
-export interface DistributorPlugin<
-  TInput = unknown,
-  TConfig extends Record<string, unknown> = Record<string, unknown>,
-> extends BotPlugin<TConfig> {
-  distribute: (args: ActionArgs<TInput, TConfig>) => Promise<void>;
-}
-
-export interface TransformerPlugin<
-  TInput = unknown, // input type
-  TOutput = unknown, // return type
-  TConfig extends Record<string, unknown> = Record<string, unknown>,
-> extends BotPlugin<TConfig> {
-  transform: (args: ActionArgs<TInput, TConfig>) => Promise<TOutput>;
-}
-
-// Plugin loader types (helper for caching a plugin instance)
-export interface PluginCache<T extends PluginType, TPlugin extends BotPlugin> {
-  instance: TPlugin & {
-    __config: PluginConfig<T, TPlugin extends BotPlugin<infer C> ? C : never>;
-  };
-  lastLoaded: Date;
-}
+// (BELOW IS DEPRECIATED) - to be removed
 
 // RSS types
 export interface RssItem {

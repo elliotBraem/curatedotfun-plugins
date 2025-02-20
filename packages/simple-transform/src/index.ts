@@ -1,4 +1,4 @@
-import { TransformerPlugin, ActionArgs } from "@curatedotfun/types";
+import type { TransformerPlugin, ActionArgs } from "@curatedotfun/types";
 
 interface TwitterSubmission {
   content: string;
@@ -17,12 +17,11 @@ export default class SimpleTransformer
   implements
     TransformerPlugin<TwitterSubmission, string, SimpleTransformerConfig>
 {
-  name = "simple-transform";
-  version = "0.0.1";
+  readonly type = "transform" as const;
   private format: string = "{CONTENT}"; // Default format if none provided
 
-  async initialize(config: SimpleTransformerConfig): Promise<void> {
-    if (config.format) {
+  async initialize(config?: SimpleTransformerConfig): Promise<void> {
+    if (config?.format) {
       this.format = config.format;
     }
   }

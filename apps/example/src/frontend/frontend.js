@@ -1,30 +1,30 @@
 // Available plugins
 const AVAILABLE_PLUGINS = {
-  transform: ["simple-transform", "ai-transform"],
-  distribute: ["notion", "telegram", "rss", "supabase"],
+  transform: ["@curatedotfun/simple-transform", "@curatedotfun/ai-transform"],
+  distribute: ["@curatedotfun/notion", "@curatedotfun/telegram", "@curatedotfun/rss", "@curatedotfun/supabase"],
 };
 
 // Plugin default configurations
 const PLUGIN_DEFAULTS = {
-  "simple-transform": {
+  "@curatedotfun/simple-transform": {
     format: "🚀 {CONTENT} #automated",
   },
-  "ai-transform": {
+  "@curatedotfun/ai-transform": {
     prompt: "Transform this into an engaging social media post",
     apiKey: "{OPENROUTER_API_KEY}",
   },
-  notion: {
+  "@curatedotfun/notion": {
     token: "{NOTION_TOKEN}",
     databaseId: "your-database-id",
   },
-  telegram: {
+  "@curatedotfun/telegram": {
     botToken: "{TELEGRAM_BOT_TOKEN}",
     channelId: "@your_channel",
   },
-  rss: {
+  "@curatedotfun/rss": {
     url: "https://example.com/feed.xml",
   },
-  supabase: {
+  "@curatedotfun/supabase": {
     url: "{SUPABASE_URL}",
     key: "{SUPABASE_KEY}",
     table: "your-table-name",
@@ -35,13 +35,13 @@ const PLUGIN_DEFAULTS = {
 const DEFAULT_CONFIG = {
   transform: [
     {
-      plugin: "simple-transform",
+      plugin: "@curatedotfun/simple-transform",
       config: {
         format: "🚀 {CONTENT} #automated",
       },
     },
     {
-      plugin: "ai-transform",
+      plugin: "@curatedotfun/ai-transform",
       config: {
         prompt: "Transform this into an engaging social media post",
         apiKey: "{OPENROUTER_API_KEY}",
@@ -50,14 +50,7 @@ const DEFAULT_CONFIG = {
   ],
   distribute: [
     {
-      plugin: "notion",
-      config: {
-        token: "{NOTION_TOKEN}",
-        databaseId: "your-database-id",
-      },
-    },
-    {
-      plugin: "telegram",
+      plugin: "@curatedotfun/telegram",
       config: {
         botToken: "{TELEGRAM_BOT_TOKEN}",
         channelId: "@your_channel",

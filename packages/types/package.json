@@ -1,17 +1,8 @@
 {
   "name": "@curatedotfun/types",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Type definitions for curatedotfun plugins",
-  "type": "module",
   "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
   "files": [
     "dist",
     "package.json"
@@ -36,6 +27,7 @@
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
+    "@curatedotfun/utils": "workspace:*",
     "typescript": "^5.0.0"
   }
 }

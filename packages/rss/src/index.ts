@@ -1,6 +1,6 @@
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
-import {
+import type {
   DistributorPlugin,
   DBOperations,
   RssItem,
@@ -17,8 +17,7 @@ interface RssConfig {
 }
 
 export default class RssPlugin implements DistributorPlugin<string, RssConfig> {
-  name = "@curatedotfun/rss";
-  version = "0.0.1";
+  readonly type = "distributor" as const;
   private services: Map<string, RssService> = new Map();
   private dbOps?: DBOperations;
 
@@ -30,7 +29,10 @@ export default class RssPlugin implements DistributorPlugin<string, RssConfig> {
     this.dbOps = dbOperations;
   }
 
-  async initialize(config: RssConfig): Promise<void> {
+  async initialize(config?: RssConfig): Promise<void> {
+    if (!config) {
+      throw new Error("RSS plugin requires configuration");
+    }
     if (!config.title) {
       throw new Error("RSS plugin requires title");
     }

@@ -1,5 +1,7 @@
 const path = require("path");
 const { rspack } = require("@rspack/core");
+const pkg = require("./package.json");
+const { getNormalizedRemoteName } = require("@curatedotfun/utils");
 
 module.exports = {
   entry: "./src/index",
@@ -7,7 +9,7 @@ module.exports = {
   target: "async-node",
   devtool: "source-map",
   output: {
-    uniqueName: "simple-transform",
+    uniqueName: getNormalizedRemoteName(pkg.name),
     publicPath: "auto",
     path: path.resolve(__dirname, "dist"),
     clean: true,
@@ -16,7 +18,7 @@ module.exports = {
   devServer: {
     static: path.join(__dirname, "dist"),
     hot: true,
-    port: 3005,
+    port: 3003,
     devMiddleware: {
       writeToDisk: true,
     },
@@ -35,7 +37,7 @@ module.exports = {
   },
   plugins: [
     new rspack.container.ModuleFederationPlugin({
-      name: "simple-transform",
+      name: getNormalizedRemoteName(pkg.name),
       filename: "remoteEntry.js",
       runtimePlugins: [
         require.resolve("@module-federation/node/runtimePlugin"),
@@ -44,11 +46,7 @@ module.exports = {
       exposes: {
         "./plugin": "./src/index.ts",
       },
-      shared: {
-        "@curatedotfun/types": {
-          singleton: true,
-        },
-      },
+      shared: {},
     }),
   ],
 };

@@ -1,4 +1,4 @@
-import { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
+import type { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 interface SupabaseConfig {
@@ -11,13 +11,14 @@ interface SupabaseConfig {
 export default class SupabasePlugin
   implements DistributorPlugin<string, SupabaseConfig>
 {
-  name = "supabase";
-  version = "0.0.1";
+  readonly type = "distributor" as const;
   private client: SupabaseClient | null = null;
   private tableName: string | null = null;
 
-  async initialize(config: SupabaseConfig): Promise<void> {
-    // Validate required config
+  async initialize(config?: SupabaseConfig): Promise<void> {
+    if (!config) {
+      throw new Error("Supabase plugin requires configuration");
+    }
     if (!config.url) {
       throw new Error("Supabase plugin requires url");
     }

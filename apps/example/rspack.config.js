@@ -48,12 +48,7 @@ module.exports = {
       filename: "remoteEntry.js",
       runtimePlugins: [
         require.resolve("@module-federation/node/runtimePlugin"),
-      ],
-      shared: {
-        "@curatedotfun/types": {
-          singleton: true,
-        },
-      },
+      ],      
     }),
     {
       apply(compiler) {

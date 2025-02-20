@@ -1,10 +1,10 @@
+import { DistributorPlugin } from "@curatedotfun/types";
 import "dotenv/config";
-import { PluginService } from "./plugin-service";
-import { DistributorPlugin, TransformerPlugin } from "@curatedotfun/types";
 import express from "express";
 import path from "path";
+import { PluginService } from "./plugin-service";
+import { getPluginByName } from "./plugin-service/plugin-registry";
 import { hydrateConfigValues } from "./utils";
-import { getPluginByName } from "./plugin-registry";
 
 async function main() {
   const app = express();
@@ -40,7 +40,7 @@ async function main() {
             {
               type: "distributor",
               config: hydratedConfig,
-            }
+            },
           );
 
           loadedPlugins.push(plugin);

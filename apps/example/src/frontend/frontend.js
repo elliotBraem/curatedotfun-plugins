@@ -1,7 +1,12 @@
 // Available plugins
 const AVAILABLE_PLUGINS = {
   transform: ["@curatedotfun/simple-transform", "@curatedotfun/ai-transform"],
-  distribute: ["@curatedotfun/notion", "@curatedotfun/telegram", "@curatedotfun/rss", "@curatedotfun/supabase"],
+  distribute: [
+    "@curatedotfun/notion",
+    "@curatedotfun/telegram",
+    "@curatedotfun/rss",
+    "@curatedotfun/supabase",
+  ],
 };
 
 // Plugin default configurations

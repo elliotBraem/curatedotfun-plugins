@@ -132,7 +132,6 @@ export function validatePluginConfig(
   }
 }
 
-
 interface RemoteConfig {
   name: string;
   entry: string;
@@ -156,12 +155,12 @@ interface InstanceState<T extends PluginType> {
 
 type PluginContainer<T extends PluginType> =
   | {
-    default?: new () => PluginTypeMap<
-      unknown,
-      unknown,
-      Record<string, unknown>
-    >[T];
-  }
+      default?: new () => PluginTypeMap<
+        unknown,
+        unknown,
+        Record<string, unknown>
+      >[T];
+    }
   | (new () => PluginTypeMap<unknown, unknown, Record<string, unknown>>[T]);
 
 /**
@@ -176,7 +175,7 @@ export class PluginService {
   private readonly retryDelays: number[] = [1000, 5000]; // Delays between retries in ms
 
   constructor(
-    private getPluginByName: (name: string) => { url: string } | undefined
+    private getPluginByName: (name: string) => { url: string } | undefined,
   ) {}
 
   /**
@@ -210,7 +209,11 @@ export class PluginService {
         config: pluginConfig.config,
       };
 
-      const normalizedName = name.toLowerCase().replace("@", "").replace("/", "_");
+      // const normalizedName = getNormalizedRemoteName(name);
+      const normalizedName = name
+        .toLowerCase()
+        .replace("@", "")
+        .replace("/", "_");
       const instanceId = createPluginInstanceKey(normalizedName, config);
 
       // Check existing instance
@@ -220,11 +223,7 @@ export class PluginService {
           throw new PluginError(`Plugin ${name} disabled due to auth failures`);
         }
 
-        return instance.instance as PluginTypeMap<
-          TInput,
-          TOutput,
-          TConfig
-        >[T];
+        return instance.instance as PluginTypeMap<TInput, TOutput, TConfig>[T];
       }
 
       // Get or initialize remote
@@ -242,10 +241,7 @@ export class PluginService {
       for (let attempt = 0; attempt <= this.retryDelays.length; attempt++) {
         try {
           // Load module if needed
-          if (
-            !remote.module ||
-            !remote.loadedAt
-          ) {
+          if (!remote.module || !remote.loadedAt) {
             remote.status = "loading";
             await this.loadModule(remote);
           }
@@ -323,9 +319,9 @@ export class PluginService {
       throw error instanceof PluginError
         ? error
         : new PluginError(
-          `Unexpected error with plugin ${name}`,
-          error as Error,
-        );
+            `Unexpected error with plugin ${name}`,
+            error as Error,
+          );
     }
   }
 

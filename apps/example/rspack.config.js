@@ -48,7 +48,7 @@ module.exports = {
       filename: "remoteEntry.js",
       runtimePlugins: [
         require.resolve("@module-federation/node/runtimePlugin"),
-      ],      
+      ],
     }),
     {
       apply(compiler) {

@@ -3,16 +3,22 @@
   "globalDependencies": ["**/.env"],
   "globalEnv": ["NODE_ENV"],
   "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": true
+    },
+    "clean": {
+      "cache": false
     }
   }
 }

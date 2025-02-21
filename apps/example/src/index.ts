@@ -3,7 +3,11 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import { PluginService } from "./plugin-service";
-import { getPluginByName, getPluginRegistry, setPluginRegistry } from "./plugin-service/plugin-registry";
+import {
+  getPluginByName,
+  getPluginRegistry,
+  setPluginRegistry,
+} from "./plugin-service/plugin-registry";
 import { hydrateConfigValues } from "./utils";
 
 async function main() {
@@ -126,7 +130,10 @@ async function main() {
       const registry = getPluginRegistry();
       res.json({ success: true, registry });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to get plugin registry";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to get plugin registry";
       console.error("Error getting plugin registry:", error);
       res.status(500).json({
         success: false,
@@ -138,14 +145,17 @@ async function main() {
   app.post("/api/plugin-registry", (req, res) => {
     try {
       const newRegistry = req.body.registry;
-      if (!newRegistry || typeof newRegistry !== 'object') {
+      if (!newRegistry || typeof newRegistry !== "object") {
         throw new Error("Invalid registry format");
       }
-      
+
       setPluginRegistry(newRegistry);
       res.json({ success: true });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to update plugin registry";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update plugin registry";
       console.error("Error updating plugin registry:", error);
       res.status(500).json({
         success: false,

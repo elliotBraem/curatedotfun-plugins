@@ -10,28 +10,28 @@ interface PluginMetadata {
 let pluginRegistry: Record<string, PluginMetadata> = {
   "@curatedotfun/notion": {
     url: "http://localhost:3003/remoteEntry.js",
-    type: "distributor"
+    type: "distributor",
   },
   "@curatedotfun/rss": {
     url: "http://localhost:3004/remoteEntry.js",
-    type: "distributor"
+    type: "distributor",
   },
   "@curatedotfun/supabase": {
     url: "http://localhost:3006/remoteEntry.js",
-    type: "distributor"
+    type: "distributor",
   },
   "@curatedotfun/telegram": {
     url: "http://localhost:3007/remoteEntry.js",
-    type: "distributor"
+    type: "distributor",
   },
   "@curatedotfun/simple-transform": {
     url: "http://localhost:3005/remoteEntry.js",
-    type: "transform"
+    type: "transform",
   },
   "@curatedotfun/ai-transform": {
     url: "http://localhost:3002/remoteEntry.js",
-    type: "transform"
-  }
+    type: "transform",
+  },
 };
 
 export function getPluginByName(name: string): PluginMetadata | undefined {
@@ -42,16 +42,20 @@ export function getPluginRegistry(): Record<string, PluginMetadata> {
   return pluginRegistry;
 }
 
-export function setPluginRegistry(newRegistry: Record<string, PluginMetadata>): void {
+export function setPluginRegistry(
+  newRegistry: Record<string, PluginMetadata>,
+): void {
   // Validate the new registry
   for (const [name, metadata] of Object.entries(newRegistry)) {
     if (!metadata.url || !metadata.type) {
-      throw new Error(`Invalid plugin metadata for ${name}: missing url or type`);
+      throw new Error(
+        `Invalid plugin metadata for ${name}: missing url or type`,
+      );
     }
-    if (!['distributor', 'transform'].includes(metadata.type)) {
+    if (!["distributor", "transform"].includes(metadata.type)) {
       throw new Error(`Invalid plugin type for ${name}: ${metadata.type}`);
     }
   }
-  
+
   pluginRegistry = newRegistry;
 }

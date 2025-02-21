@@ -5,39 +5,42 @@ const registryStatus = document.getElementById("registryStatus");
 
 let AVAILABLE_PLUGINS = {
   transform: [],
-  distribute: []
+  distribute: [],
 };
 
 // Fetch and update plugin registry
 async function fetchPluginRegistry() {
   try {
-    const response = await fetch('/api/plugin-registry');
+    const response = await fetch("/api/plugin-registry");
     if (!response.ok) {
-      throw new Error('Failed to fetch plugin registry');
+      throw new Error("Failed to fetch plugin registry");
     }
     const { registry } = await response.json();
-    
+
     // Update registry editor
     registryEditor.value = JSON.stringify(registry, null, 2);
-    
+
     // Update available plugins
     AVAILABLE_PLUGINS = {
       transform: Object.entries(registry)
-        .filter(([_, metadata]) => metadata.type === 'transform')
+        .filter(([_, metadata]) => metadata.type === "transform")
         .map(([name]) => name),
       distribute: Object.entries(registry)
-        .filter(([_, metadata]) => metadata.type === 'distributor')
-        .map(([name]) => name)
+        .filter(([_, metadata]) => metadata.type === "distributor")
+        .map(([name]) => name),
     };
-    
+
     // Update plugin lists if in config view
-    if (currentView === 'config') {
+    if (currentView === "config") {
       updateConfigView();
     }
-    
-    updateRegistryStatus('Plugin registry loaded successfully', 'success');
+
+    updateRegistryStatus("Plugin registry loaded successfully", "success");
   } catch (error) {
-    updateRegistryStatus(`Failed to load plugin registry: ${error.message}`, 'error');
+    updateRegistryStatus(
+      `Failed to load plugin registry: ${error.message}`,
+      "error",
+    );
   }
 }
 
@@ -45,27 +48,30 @@ async function fetchPluginRegistry() {
 async function updatePluginRegistry() {
   try {
     const newRegistry = JSON.parse(registryEditor.value);
-    
-    const response = await fetch('/api/plugin-registry', {
-      method: 'POST',
+
+    const response = await fetch("/api/plugin-registry", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ registry: newRegistry })
+      body: JSON.stringify({ registry: newRegistry }),
     });
-    
+
     if (!response.ok) {
-      throw new Error('Failed to update plugin registry');
+      throw new Error("Failed to update plugin registry");
     }
-    
+
     await fetchPluginRegistry(); // Refresh the registry
-    updateRegistryStatus('Plugin registry updated successfully', 'success');
+    updateRegistryStatus("Plugin registry updated successfully", "success");
   } catch (error) {
-    updateRegistryStatus(`Failed to update registry: ${error.message}`, 'error');
+    updateRegistryStatus(
+      `Failed to update registry: ${error.message}`,
+      "error",
+    );
   }
 }
 
-function updateRegistryStatus(message, type = 'info') {
+function updateRegistryStatus(message, type = "info") {
   registryStatus.textContent = message;
   registryStatus.className = `status ${type}`;
 }
@@ -527,7 +533,7 @@ document
   .addEventListener("click", () => addNewPlugin("distribute"));
 
 // Initialize
-updateRegistryBtn.addEventListener('click', updatePluginRegistry);
+updateRegistryBtn.addEventListener("click", updatePluginRegistry);
 fetchPluginRegistry().then(() => {
   loadConfig();
   updateTransformButton();

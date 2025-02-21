@@ -40,8 +40,5 @@ export function hydrateConfigValues<T extends Record<string, any>>(
 
 // This could be replaced with @curatedotfun/utils, but facing some strange "(void 0) is not a function" issue
 export function getNormalizedRemoteName(packageName: string) {
-  return packageName
-    .toLowerCase()
-    .replace("@", "")
-    .replace("/", "_");
+  return packageName.toLowerCase().replace("@", "").replace("/", "_");
 }

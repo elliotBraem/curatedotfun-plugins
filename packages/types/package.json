@@ -3,14 +3,14 @@
   "version": "0.0.3",
   "description": "Type definitions for curatedotfun plugins",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "package.json"
-  ],
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/potlock/curatedotfun-plugins.git",

@@ -4,8 +4,12 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ],
   "scripts": {
     "build": "tsc --build tsconfig.json",
@@ -13,8 +17,5 @@
   },
   "devDependencies": {
     "typescript": "^5.0.4"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

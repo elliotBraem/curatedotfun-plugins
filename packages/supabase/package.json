@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/supabase",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Supabase plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,6 +16,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/potlock/curatedotfun-plugins.git",

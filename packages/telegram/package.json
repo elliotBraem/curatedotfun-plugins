@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/telegram",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Telegram plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,6 +16,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/potlock/curatedotfun-plugins.git",

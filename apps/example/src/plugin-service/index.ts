@@ -7,6 +7,7 @@ import {
   PluginTypeMap,
 } from "@curatedotfun/types";
 import { createHash } from "crypto";
+import { getNormalizedRemoteName } from "../utils";
 
 export class PluginError extends Error {
   constructor(
@@ -209,11 +210,7 @@ export class PluginService {
         config: pluginConfig.config,
       };
 
-      // const normalizedName = getNormalizedRemoteName(name);
-      const normalizedName = name
-        .toLowerCase()
-        .replace("@", "")
-        .replace("/", "_");
+      const normalizedName = getNormalizedRemoteName(name);
       const instanceId = createPluginInstanceKey(normalizedName, config);
 
       // Check existing instance

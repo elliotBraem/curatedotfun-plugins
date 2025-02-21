@@ -1,13 +1,74 @@
-// Available plugins
-const AVAILABLE_PLUGINS = {
-  transform: ["@curatedotfun/simple-transform", "@curatedotfun/ai-transform"],
-  distribute: [
-    "@curatedotfun/notion",
-    "@curatedotfun/telegram",
-    "@curatedotfun/rss",
-    "@curatedotfun/supabase",
-  ],
+// DOM Elements for registry
+const registryEditor = document.getElementById("registryEditor");
+const updateRegistryBtn = document.getElementById("updateRegistry");
+const registryStatus = document.getElementById("registryStatus");
+
+let AVAILABLE_PLUGINS = {
+  transform: [],
+  distribute: []
 };
+
+// Fetch and update plugin registry
+async function fetchPluginRegistry() {
+  try {
+    const response = await fetch('/api/plugin-registry');
+    if (!response.ok) {
+      throw new Error('Failed to fetch plugin registry');
+    }
+    const { registry } = await response.json();
+    
+    // Update registry editor
+    registryEditor.value = JSON.stringify(registry, null, 2);
+    
+    // Update available plugins
+    AVAILABLE_PLUGINS = {
+      transform: Object.entries(registry)
+        .filter(([_, metadata]) => metadata.type === 'transform')
+        .map(([name]) => name),
+      distribute: Object.entries(registry)
+        .filter(([_, metadata]) => metadata.type === 'distributor')
+        .map(([name]) => name)
+    };
+    
+    // Update plugin lists if in config view
+    if (currentView === 'config') {
+      updateConfigView();
+    }
+    
+    updateRegistryStatus('Plugin registry loaded successfully', 'success');
+  } catch (error) {
+    updateRegistryStatus(`Failed to load plugin registry: ${error.message}`, 'error');
+  }
+}
+
+// Update plugin registry
+async function updatePluginRegistry() {
+  try {
+    const newRegistry = JSON.parse(registryEditor.value);
+    
+    const response = await fetch('/api/plugin-registry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ registry: newRegistry })
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update plugin registry');
+    }
+    
+    await fetchPluginRegistry(); // Refresh the registry
+    updateRegistryStatus('Plugin registry updated successfully', 'success');
+  } catch (error) {
+    updateRegistryStatus(`Failed to update registry: ${error.message}`, 'error');
+  }
+}
+
+function updateRegistryStatus(message, type = 'info') {
+  registryStatus.textContent = message;
+  registryStatus.className = `status ${type}`;
+}
 
 // Plugin default configurations
 const PLUGIN_DEFAULTS = {
@@ -466,6 +527,9 @@ document
   .addEventListener("click", () => addNewPlugin("distribute"));
 
 // Initialize
-loadConfig();
-updateTransformButton();
-toggleView(); // Start in config view
+updateRegistryBtn.addEventListener('click', updatePluginRegistry);
+fetchPluginRegistry().then(() => {
+  loadConfig();
+  updateTransformButton();
+  toggleView(); // Start in config view
+});

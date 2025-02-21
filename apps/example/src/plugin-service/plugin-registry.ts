@@ -1,23 +1,57 @@
+import { PluginType } from "@curatedotfun/types";
+
 interface PluginMetadata {
   url: string;
+  type: PluginType;
 }
 
-const PLUGIN_PORTS: Record<string, number> = {
-  "@curatedotfun/notion": 3003,
-  "@curatedotfun/rss": 3004,
-  "@curatedotfun/supabase": 3006,
-  "@curatedotfun/telegram": 3007,
-  "@curatedotfun/simple-transform": 3005,
-  "@curatedotfun/ai-transform": 3002,
+// Initial plugin registry with types
+// UPDATE THIS IF ADDING A NEW PLUGIN TO REPOSITORY
+let pluginRegistry: Record<string, PluginMetadata> = {
+  "@curatedotfun/notion": {
+    url: "http://localhost:3003/remoteEntry.js",
+    type: "distributor"
+  },
+  "@curatedotfun/rss": {
+    url: "http://localhost:3004/remoteEntry.js",
+    type: "distributor"
+  },
+  "@curatedotfun/supabase": {
+    url: "http://localhost:3006/remoteEntry.js",
+    type: "distributor"
+  },
+  "@curatedotfun/telegram": {
+    url: "http://localhost:3007/remoteEntry.js",
+    type: "distributor"
+  },
+  "@curatedotfun/simple-transform": {
+    url: "http://localhost:3005/remoteEntry.js",
+    type: "transform"
+  },
+  "@curatedotfun/ai-transform": {
+    url: "http://localhost:3002/remoteEntry.js",
+    type: "transform"
+  }
 };
 
 export function getPluginByName(name: string): PluginMetadata | undefined {
-  const port = PLUGIN_PORTS[name];
-  if (!port) {
-    return undefined;
-  }
+  return pluginRegistry[name];
+}
 
-  return {
-    url: `http://localhost:${port}/remoteEntry.js`,
-  };
+export function getPluginRegistry(): Record<string, PluginMetadata> {
+  return pluginRegistry;
+}
+
+export function setPluginRegistry(newRegistry: Record<string, PluginMetadata>): void {
+  // Validate the new registry
+  for (const [name, metadata] of Object.entries(newRegistry)) {
+    if (!metadata.url || !metadata.type) {
+      throw new Error(`Invalid plugin metadata for ${name}: missing url or type`);
+    }
+    if (!['distributor', 'transform'].includes(metadata.type)) {
+      throw new Error(`Invalid plugin type for ${name}: ${metadata.type}`);
+    }
+  }
+  
+  pluginRegistry = newRegistry;
 }

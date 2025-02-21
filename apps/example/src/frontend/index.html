@@ -13,9 +13,13 @@
             background: #f5f5f5;
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-template-areas: 
+                "config content"
+                "registry registry";
             gap: 2rem;
         }
         .content-panel {
+            grid-area: content;
             display: flex;
             flex-direction: column;
             gap: 2rem;
@@ -26,12 +30,19 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .registry-section {
+            grid-area: registry;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
         .config-controls {
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        #configEditor {
+        #configEditor, #registryEditor {
             width: 100%;
             height: 300px;
             font-family: monospace;
@@ -169,6 +180,7 @@
         
         <div id="configStatus" class="status"></div>
     </div>
+
     <div class="content-panel">
         <div class="config-section">
             <h2>Content</h2>
@@ -184,6 +196,15 @@
             <div id="distributeStatus" class="status"></div>
         </div>
     </div>
+
+    <div class="registry-section">
+        <h2>Plugin Registry</h2>
+        <p>Edit the plugin registry to add or modify available plugins.</p>
+        <textarea id="registryEditor" spellcheck="false"></textarea>
+        <button id="updateRegistry" class="button" style="background: #FF9800">Update Registry</button>
+        <div id="registryStatus" class="status"></div>
+    </div>
+
     <script src="frontend.js"></script>
 </body>
 </html>

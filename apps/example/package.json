@@ -3,14 +3,17 @@
   "version": "0.0.1",
   "scripts": {
     "build": "rspack build",
-    "start": "rspack build && node dist/main.js"
+    "start": "rspack build && node dist/main.js",
+    "dev": "NODE_ENV=development concurrently \"rspack build --watch\" \"wait-on dist/main.js && bun --watch dist/main.js\""
   },
   "devDependencies": {
     "@curatedotfun/types": "workspace:*",
     "@rspack/cli": "latest",
     "@types/node": "^20.0.0",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "wait-on": "^8.0.2"
   },
   "dependencies": {
     "@module-federation/node": "^2.6.22",

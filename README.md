@@ -44,12 +44,23 @@ Then, publish as a standalone package. Make a pull request to add your plugin be
 Each plugin runs on its own port in development mode with hot reloading:
 
 ```bash
-# Run all plugins
+# Run all plugins and example plugin manager
 bun run dev
 
 # Run specific plugins
 bun run dev --filter=@curatedotfun/plugin-name
 ```
+
+#### Plugin Manager
+
+A development tool is included in `apps/example` that helps you test and manage plugins. It provides:
+
+- Runtime plugin loading without installation
+- Plugin registry management through UI
+- Transform and distribute testing
+- Environment variable configuration
+
+See [Plugin Manager Documentation](apps/example/README.md) for details on testing your remote plugins locally.
 
 ### Supported Plugins
 

@@ -66,7 +66,7 @@ export default class AITransformer<T = string>
     }
     this.prompt = config.prompt;
     this.apiKey = config.apiKey;
-    if (typeof config.temperature === 'number') {
+    if (typeof config.temperature === "number") {
       this.temperature = config.temperature;
     }
     if (config.schema) {
@@ -89,13 +89,14 @@ export default class AITransformer<T = string>
     }
   }
 
-  async transform({
-    input,
-  }: ActionArgs<TransformInput, AIConfig>): Promise<T> {
+  async transform({ input }: ActionArgs<TransformInput, AIConfig>): Promise<T> {
     try {
       const messages: Message[] = [
         { role: "system", content: this.prompt },
-        { role: "user", content: typeof input === "string" ? input : JSON.stringify(input) },
+        {
+          role: "user",
+          content: typeof input === "string" ? input : JSON.stringify(input),
+        },
       ];
 
       const response = await fetch(
@@ -112,7 +113,9 @@ export default class AITransformer<T = string>
             model: this.model,
             messages,
             temperature: this.temperature,
-            ...(this.responseFormat && { response_format: this.responseFormat }),
+            ...(this.responseFormat && {
+              response_format: this.responseFormat,
+            }),
           }),
         },
       );
@@ -132,7 +135,7 @@ export default class AITransformer<T = string>
       }
 
       const content = result.choices[0].message.content;
-      
+
       if (this.responseFormat) {
         try {
           return JSON.parse(content) as T;
@@ -140,7 +143,7 @@ export default class AITransformer<T = string>
           throw new Error(`Failed to parse JSON response: ${error}`);
         }
       }
-      
+
       return content as T;
     } catch (error: unknown) {
       const errorMessage =

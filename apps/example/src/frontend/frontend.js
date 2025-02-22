@@ -84,20 +84,20 @@ const PLUGIN_DEFAULTS = {
     schema: {
       title: {
         type: "string",
-        description: "Title derived from summary of content"
+        description: "Title derived from summary of content",
       },
       content: {
         type: "string",
-        description: "Engaging social media post"
-      }
-    }
+        description: "Engaging social media post",
+      },
+    },
   },
   "@curatedotfun/object-transform": {
     mappings: {
       title: "Title: {{title}}",
       content: "Generated Content: {{content}}",
-      tags: ["automated", "content"]
-    }
+      tags: ["automated", "content"],
+    },
   },
   "@curatedotfun/simple-transform": {
     format: "🚀 {{title}} \n\n {{content}} \n\n#{{#tags}}#{{.}}{{/tags}}",
@@ -129,11 +129,11 @@ const DEFAULT_CONFIG = {
     },
     {
       plugin: "@curatedotfun/object-transform",
-      config: PLUGIN_DEFAULTS["@curatedotfun/object-transform"]
+      config: PLUGIN_DEFAULTS["@curatedotfun/object-transform"],
     },
     {
       plugin: "@curatedotfun/simple-transform",
-      config: PLUGIN_DEFAULTS["@curatedotfun/simple-transform"]
+      config: PLUGIN_DEFAULTS["@curatedotfun/simple-transform"],
     },
   ],
   distribute: [
@@ -381,7 +381,7 @@ async function transformContent() {
 
       // Try to parse current content as JSON if it's a string that looks like JSON
       let parsedContent = currentContent;
-      if (typeof currentContent === 'string') {
+      if (typeof currentContent === "string") {
         try {
           parsedContent = JSON.parse(currentContent);
         } catch (e) {
@@ -410,9 +410,10 @@ async function transformContent() {
       const result = await response.json();
       currentContent = result.output;
       // Format the output for display
-      contentEditor.value = typeof currentContent === 'object' 
-        ? JSON.stringify(currentContent, null, 2)
-        : currentContent;
+      contentEditor.value =
+        typeof currentContent === "object"
+          ? JSON.stringify(currentContent, null, 2)
+          : currentContent;
     }
 
     updateTransformStatus(

@@ -3,10 +3,10 @@ import { Client } from "@notionhq/client";
 
 type NotionPropertyValue = {
   title?: Array<{
-    text: { content: string }
+    text: { content: string };
   }>;
   rich_text?: Array<{
-    text: { content: string }
+    text: { content: string };
   }>;
   date?: {
     start: string;
@@ -72,7 +72,7 @@ export default class NotionPlugin
   }
 
   private formatProperty(value: unknown): NotionPropertyValue {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       return {
         rich_text: [
           {
@@ -83,8 +83,11 @@ export default class NotionPlugin
         ],
       };
     }
-    
-    if (value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)))) {
+
+    if (
+      value instanceof Date ||
+      (typeof value === "string" && !isNaN(Date.parse(value)))
+    ) {
       return {
         date: {
           start: new Date(value).toISOString(),
@@ -92,13 +95,13 @@ export default class NotionPlugin
       };
     }
 
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return {
         number: value,
       };
     }
 
-    if (typeof value === 'boolean') {
+    if (typeof value === "boolean") {
       return {
         checkbox: value,
       };
@@ -107,7 +110,7 @@ export default class NotionPlugin
     // For arrays (multi-select)
     if (Array.isArray(value)) {
       return {
-        multi_select: value.map(item => ({ name: String(item) })),
+        multi_select: value.map((item) => ({ name: String(item) })),
       };
     }
 
@@ -133,7 +136,7 @@ export default class NotionPlugin
 
     // First, look for a property named "title" or "Title"
     for (const [key] of Object.entries(properties)) {
-      if (key.toLowerCase() === 'title') {
+      if (key.toLowerCase() === "title") {
         titlePropertyKey = key;
         break;
       }

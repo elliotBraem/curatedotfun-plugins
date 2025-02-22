@@ -88,7 +88,7 @@ export default class TelegramPlugin
     } = {
       chat_id: chatId,
       text,
-      parse_mode: "MarkdownV2"
+      parse_mode: "MarkdownV2",
     };
 
     if (this.messageThreadId) {

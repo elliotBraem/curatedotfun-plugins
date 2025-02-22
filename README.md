@@ -62,64 +62,6 @@ A development tool is included in `apps/example` that helps you test and manage 
 
 See [Plugin Manager Documentation](apps/example/README.md) for details on testing your remote plugins locally.
 
-### Supported Plugins
-
-The following plugins are currently supported:
-
-| Plugin | Type | Description | Development Port |
-|--------|------|-------------|------------------|
-| ai-transform | Transform | AI-powered content transformation | 3002 |
-| notion | Distributor | Notion integration | 3003 |
-| rss | Distributor | RSS feed integration | 3004 |
-| simple-transform | Transform | Basic content transformation | 3005 |
-| supabase | Distributor | Supabase integration | 3006 |
-| telegram | Distributor | Telegram channel integration | 3007 |
-
-### Plugin Loading
-
-The `@curatedotfun/plugin-loader` package provides a simple way to load and manage plugins:
-
-```typescript
-import { PluginLoader } from "@curatedotfun/plugin-loader";
-
-// Create loader instance (reload plugins every 5 minutes)
-const loader = new PluginLoader(5 * 60 * 1000);
-
-// Load a transform plugin
-const gptTransform = await loader.loadPlugin("gpt-transform", {
-  url: "http://localhost:3002/remoteEntry.js",
-  type: "transform",
-  config: {
-    prompt: "Your prompt",
-    apiKey: "your-api-key"
-  }
-});
-
-// Load a distributor plugin
-const telegram = await loader.loadPlugin("@curatedotfun/telegram", {
-  url: "http://localhost:3003/remoteEntry.js",
-  type: "distributor",
-  config: {
-    botToken: "your-bot-token",
-    channelId: "your-channel-id"
-  }
-});
-
-// Use plugins
-await gptTransform.transform({ input: "Hello" });
-await telegram.distribute("feed-1", "Content");
-
-// Force reload all plugins
-await loader.reloadAll();
-```
-
-Benefits:
-
-- Hot reloading during development
-- Automatic plugin reloading
-- Plugin instance caching
-- Type-safe plugin loading
-
 ### Building
 
 Build all plugins:

@@ -8,6 +8,10 @@ interface PluginMetadata {
 // Initial plugin registry with types
 // UPDATE THIS IF ADDING A NEW PLUGIN TO REPOSITORY
 let pluginRegistry: Record<string, PluginMetadata> = {
+  "@curatedotfun/object-transform": {
+    url: "http://localhost:3008/remoteEntry.js",
+    type: "transform",
+  },
   "@curatedotfun/notion": {
     url: "http://localhost:3003/remoteEntry.js",
     type: "distributor",

@@ -5,29 +5,54 @@ interface Message {
   content: string;
 }
 
-interface OpenRouterResponse {
+interface OpenRouterResponse<T = string> {
   choices: {
     message: {
-      content: string;
+      content: T;
     };
   }[];
 }
 
-interface AIConfig extends Record<string, string> {
+interface SchemaProperty {
+  type: "string" | "number" | "boolean" | "array";
+  description: string;
+}
+
+interface ResponseFormat {
+  type: "json_schema";
+  json_schema: {
+    name: string;
+    strict: boolean;
+    schema: {
+      type: string;
+      properties: Record<string, SchemaProperty>;
+      required: string[];
+      additionalProperties: boolean;
+    };
+  };
+}
+
+interface AIConfig extends Record<string, unknown> {
   prompt: string;
   apiKey: string;
+  model?: string;
+  schema?: Record<string, SchemaProperty>;
+  temperature?: number;
 }
 
 interface TransformInput {
   content: string;
 }
 
-export default class AITransformer
-  implements TransformerPlugin<TransformInput, string, AIConfig>
+export default class AITransformer<T = string>
+  implements TransformerPlugin<TransformInput, T, AIConfig>
 {
   readonly type = "transform" as const;
   private prompt: string = "";
   private apiKey: string = "";
+  private model?: string;
+  private responseFormat?: ResponseFormat;
+  private temperature: number = 0.7;
 
   async initialize(config?: AIConfig): Promise<void> {
     if (!config) {
@@ -41,15 +66,36 @@ export default class AITransformer
     }
     this.prompt = config.prompt;
     this.apiKey = config.apiKey;
+    if (typeof config.temperature === 'number') {
+      this.temperature = config.temperature;
+    }
+    if (config.schema) {
+      this.responseFormat = {
+        type: "json_schema",
+        json_schema: {
+          name: "transform",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: config.schema,
+            required: Object.keys(config.schema),
+            additionalProperties: false,
+          },
+        },
+      };
+      this.model = config.model || "openai/gpt-4o-2024-08-06";
+    } else {
+      this.model = config.model || "openai/gpt-3.5-turbo";
+    }
   }
 
   async transform({
     input,
-  }: ActionArgs<TransformInput, AIConfig>): Promise<string> {
+  }: ActionArgs<TransformInput, AIConfig>): Promise<T> {
     try {
       const messages: Message[] = [
         { role: "system", content: this.prompt },
-        { role: "user", content: input.content }, // Extract content string from input object
+        { role: "user", content: typeof input === "string" ? input : JSON.stringify(input) },
       ];
 
       const response = await fetch(
@@ -63,10 +109,10 @@ export default class AITransformer
             "X-Title": "CurateDotFun",
           },
           body: JSON.stringify({
-            model: "openai/gpt-3.5-turbo",
+            model: this.model,
             messages,
-            temperature: 0.7,
-            max_tokens: 1000,
+            temperature: this.temperature,
+            ...(this.responseFormat && { response_format: this.responseFormat }),
           }),
         },
       );
@@ -78,9 +124,10 @@ export default class AITransformer
         );
       }
 
-      const result = (await response.json()) as OpenRouterResponse;
+      const result = (await response.json()) as OpenRouterResponse<T>;
 
       if (!result.choices?.[0]?.message?.content) {
+        console.log("result", result);
         throw new Error("Invalid response structure from OpenRouter API");
       }
 

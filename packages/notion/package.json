@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/notion",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Notion plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

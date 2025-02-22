@@ -78,12 +78,29 @@ function updateRegistryStatus(message, type = "info") {
 
 // Plugin default configurations
 const PLUGIN_DEFAULTS = {
-  "@curatedotfun/simple-transform": {
-    format: "🚀 {CONTENT} #automated",
-  },
   "@curatedotfun/ai-transform": {
     prompt: "Transform this into an engaging social media post",
     apiKey: "{OPENROUTER_API_KEY}",
+    schema: {
+      title: {
+        type: "string",
+        description: "Title derived from summary of content"
+      },
+      content: {
+        type: "string",
+        description: "Engaging social media post"
+      }
+    }
+  },
+  "@curatedotfun/object-transform": {
+    mappings: {
+      title: "Title: {{title}}",
+      content: "Generated Content: {{content}}",
+      tags: ["automated", "content"]
+    }
+  },
+  "@curatedotfun/simple-transform": {
+    format: "🚀 {{title}} \n\n {{content}} \n\n#{{#tags}}#{{.}}{{/tags}}",
   },
   "@curatedotfun/notion": {
     token: "{NOTION_TOKEN}",
@@ -107,17 +124,16 @@ const PLUGIN_DEFAULTS = {
 const DEFAULT_CONFIG = {
   transform: [
     {
-      plugin: "@curatedotfun/simple-transform",
-      config: {
-        format: "🚀 {CONTENT} #automated",
-      },
+      plugin: "@curatedotfun/ai-transform",
+      config: PLUGIN_DEFAULTS["@curatedotfun/ai-transform"],
     },
     {
-      plugin: "@curatedotfun/ai-transform",
-      config: {
-        prompt: "Transform this into an engaging social media post",
-        apiKey: "{OPENROUTER_API_KEY}",
-      },
+      plugin: "@curatedotfun/object-transform",
+      config: PLUGIN_DEFAULTS["@curatedotfun/object-transform"]
+    },
+    {
+      plugin: "@curatedotfun/simple-transform",
+      config: PLUGIN_DEFAULTS["@curatedotfun/simple-transform"]
     },
   ],
   distribute: [
@@ -363,6 +379,17 @@ async function transformContent() {
         "info",
       );
 
+      // Try to parse current content as JSON if it's a string that looks like JSON
+      let parsedContent = currentContent;
+      if (typeof currentContent === 'string') {
+        try {
+          parsedContent = JSON.parse(currentContent);
+        } catch (e) {
+          // Not JSON, use as-is
+          parsedContent = { content: currentContent };
+        }
+      }
+
       const response = await fetch("/api/transform", {
         method: "POST",
         headers: {
@@ -371,9 +398,7 @@ async function transformContent() {
         body: JSON.stringify({
           plugin: transformConfig.plugin,
           config: transformConfig.config,
-          content: {
-            content: currentContent,
-          },
+          content: parsedContent,
         }),
       });
 
@@ -384,7 +409,10 @@ async function transformContent() {
 
       const result = await response.json();
       currentContent = result.output;
-      contentEditor.value = currentContent;
+      // Format the output for display
+      contentEditor.value = typeof currentContent === 'object' 
+        ? JSON.stringify(currentContent, null, 2)
+        : currentContent;
     }
 
     updateTransformStatus(
@@ -467,6 +495,15 @@ async function distribute() {
       throw new Error("Please enter content to distribute");
     }
 
+    // Try to parse content as JSON if it's a string that looks like JSON
+    let parsedContent = content;
+    try {
+      parsedContent = JSON.parse(content);
+    } catch (e) {
+      // Not JSON, use as-is
+      parsedContent = content;
+    }
+
     const response = await fetch("/api/distribute", {
       method: "POST",
       headers: {
@@ -474,7 +511,7 @@ async function distribute() {
       },
       body: JSON.stringify({
         ...config,
-        content,
+        content: parsedContent,
       }),
     });
 

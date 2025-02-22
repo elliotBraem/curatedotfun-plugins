@@ -1,7 +1,7 @@
 {
-  "name": "@curatedotfun/simple-transform",
-  "version": "0.0.6",
-  "description": "Simple transform plugin for curatedotfun",
+  "name": "@curatedotfun/object-transform",
+  "version": "0.0.1",
+  "description": "Object transformation plugin for curatedotfun with configurable field mappings",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -23,12 +23,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/potlock/curatedotfun-plugins.git",
-    "directory": "packages/simple-transform"
+    "directory": "packages/object-transform"
   },
   "keywords": [
     "curatedotfun",
     "transform",
-    "plugin"
+    "plugin",
+    "object-mapping"
   ],
   "scripts": {
     "build": "rspack build && tsc -p tsconfig.build.json",
@@ -43,6 +44,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "zod": "^3.24.2"
   }
 }

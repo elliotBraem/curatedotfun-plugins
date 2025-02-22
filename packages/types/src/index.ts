@@ -1,4 +1,4 @@
-export type PluginType = "transform" | "distributor";
+export type PluginType = "transformer" | "distributor";
 
 // Base plugin interface
 export interface BotPlugin<
@@ -9,19 +9,13 @@ export interface BotPlugin<
   shutdown?: () => Promise<void>;
 }
 
-// Plugin action type (used by all plugins)
-export interface ActionArgs<TInput = unknown, TConfig = unknown> {
-  input: TInput;
-  config?: TConfig;
-}
-
 // Specific plugin interfaces
 export interface TransformerPlugin<
   TInput = unknown,
   TOutput = unknown,
   TConfig extends Record<string, unknown> = Record<string, unknown>,
 > extends BotPlugin<TConfig> {
-  type: "transform";
+  type: "transformer";
   transform: (args: ActionArgs<TInput, TConfig>) => Promise<TOutput>;
 }
 
@@ -31,6 +25,12 @@ export interface DistributorPlugin<
 > extends BotPlugin<TConfig> {
   type: "distributor";
   distribute: (args: ActionArgs<TInput, TConfig>) => Promise<void>;
+}
+
+// Plugin action type (used by all plugins)
+export interface ActionArgs<TInput = unknown, TConfig = unknown> {
+  input: TInput;
+  config?: TConfig;
 }
 
 /**

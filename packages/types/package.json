@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/types",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Type definitions for curatedotfun plugins",
   "types": "./dist/index.d.ts",
   "license": "MIT",

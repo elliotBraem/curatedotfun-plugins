@@ -362,7 +362,7 @@ export class PluginService {
       remote.status = "active";
       remote.lastError = undefined;
 
-      console.info(`Loaded module for remote ${remote.config.name}`, {
+      console.debug(`Loaded module for remote ${remote.config.name}`, {
         activeRemotes: Array.from(this.remotes.keys()),
       });
     } catch (error) {

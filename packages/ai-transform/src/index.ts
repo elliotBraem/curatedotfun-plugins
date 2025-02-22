@@ -5,10 +5,10 @@ interface Message {
   content: string;
 }
 
-interface OpenRouterResponse<T = string> {
+interface OpenRouterResponse {
   choices: {
     message: {
-      content: T;
+      content: string;
     };
   }[];
 }
@@ -124,14 +124,24 @@ export default class AITransformer<T = string>
         );
       }
 
-      const result = (await response.json()) as OpenRouterResponse<T>;
+      const result = (await response.json()) as OpenRouterResponse;
 
       if (!result.choices?.[0]?.message?.content) {
         console.log("result", result);
         throw new Error("Invalid response structure from OpenRouter API");
       }
 
-      return result.choices[0].message.content;
+      const content = result.choices[0].message.content;
+      
+      if (this.responseFormat) {
+        try {
+          return JSON.parse(content) as T;
+        } catch (error) {
+          throw new Error(`Failed to parse JSON response: ${error}`);
+        }
+      }
+      
+      return content as T;
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";

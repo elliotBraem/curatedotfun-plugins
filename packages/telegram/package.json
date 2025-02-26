@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/telegram",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Telegram plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,12 +34,18 @@
   "scripts": {
     "build": "rspack build && tsc -p tsconfig.build.json",
     "dev": "rspack serve",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "vitest"
   },
   "devDependencies": {
     "@curatedotfun/types": "workspace:*",
     "@curatedotfun/utils": "workspace:*",
     "@rspack/cli": "latest",
-    "typescript": "^5.0.0"
+    "@types/jest": "^29.5.14",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.7"
+  },
+  "dependencies": {
+    "telegramify-markdown": "^1.2.2"
   }
 }

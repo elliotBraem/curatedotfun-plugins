@@ -1,4 +1,5 @@
-import type { DistributorPlugin, ActionArgs } from "@curatedotfun/types";
+import type { ActionArgs, DistributorPlugin } from "@curatedotfun/types";
+import telegramifyMarkdown from "telegramify-markdown";
 
 interface TelegramConfig {
   botToken: string;
@@ -65,13 +66,15 @@ export default class TelegramPlugin
   }
 
   private formatMessage(content: string): string {
-    // Format message for Telegram
-    // - Replace markdown with HTML tags
-    // - Escape special characters
-    // - Handle links and formatting
+    // First let telegramify-markdown handle the markdown conversion
+    let formatted = telegramifyMarkdown(content, "escape");
 
-    // For now, return as-is until specific formatting requirements are defined
-    return content;
+    // Handle URL paths - escape dots and hyphens in URLs
+    formatted = formatted.replace(/\]\((https?:\/\/[^)]+)\)/g, (match, url) => {
+      return `](${url.replace(/([.-])/g, "\\$1")})`;
+    });
+
+    return formatted;
   }
 
   private async sendMessage(text: string): Promise<void> {

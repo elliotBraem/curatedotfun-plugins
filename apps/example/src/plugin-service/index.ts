@@ -417,7 +417,7 @@ export class PluginService {
     switch (type) {
       case "distributor":
         return typeof instance.distribute === "function";
-      case "transform":
+      case "transformer":
         return typeof instance.transform === "function";
       default:
         return false;

@@ -47,7 +47,7 @@ interface TransformInput {
 export default class AITransformer<T = string>
   implements TransformerPlugin<TransformInput, T, AIConfig>
 {
-  readonly type = "transform" as const;
+  readonly type = "transformer" as const;
   private prompt: string = "";
   private apiKey: string = "";
   private model?: string;
@@ -73,7 +73,7 @@ export default class AITransformer<T = string>
       this.responseFormat = {
         type: "json_schema",
         json_schema: {
-          name: "transform",
+          name: "transformer",
           strict: true,
           schema: {
             type: "object",

@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/object-transform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Object transformation plugin for curatedotfun with configurable field mappings",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "keywords": [
     "curatedotfun",
-    "transform",
+    "transformer",
     "plugin",
     "object-mapping"
   ],

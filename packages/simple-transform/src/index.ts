@@ -8,7 +8,7 @@ interface SimpleTransformerConfig extends Record<string, unknown> {
 export default class SimpleTransformer
   implements TransformerPlugin<unknown, string, SimpleTransformerConfig>
 {
-  readonly type = "transform" as const;
+  readonly type = "transformer" as const;
   private template: string = "{{content}}"; // Simple default template
 
   async initialize(config?: SimpleTransformerConfig): Promise<void> {

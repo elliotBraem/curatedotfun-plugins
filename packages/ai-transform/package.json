@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/ai-transform",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "AI transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,7 +20,7 @@
   "keywords": [
     "curatedotfun",
     "ai",
-    "transform",
+    "transformer",
     "plugin"
   ],
   "scripts": {

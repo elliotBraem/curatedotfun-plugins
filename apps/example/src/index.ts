@@ -105,8 +105,8 @@ async function main() {
       const hydratedConfig = hydrateConfigValues(pluginConfig);
 
       // Load and configure transform plugin
-      const plugin = await pluginService.getPlugin<"transform">(pluginName, {
-        type: "transform",
+      const plugin = await pluginService.getPlugin<"transformer">(pluginName, {
+        type: "transformer",
         config: hydratedConfig,
       });
 

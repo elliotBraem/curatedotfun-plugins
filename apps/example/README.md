@@ -45,7 +45,7 @@ Example plugin registry format:
 {
   "@curatedotfun/simple-transform": {
     "url": "http://localhost:3005/remoteEntry.js",
-    "type": "transform"
+    "type": "transformer"
   },
   "@curatedotfun/telegram": {
     "url": "http://localhost:3007/remoteEntry.js",

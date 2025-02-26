@@ -13,7 +13,7 @@ export default class ObjectTransformer
   implements
     TransformerPlugin<Record<string, unknown>, Record<string, unknown>, Config>
 {
-  readonly type = "transform" as const;
+  readonly type = "transformer" as const;
   private config: Config | null = null;
 
   async initialize(config?: Config): Promise<void> {

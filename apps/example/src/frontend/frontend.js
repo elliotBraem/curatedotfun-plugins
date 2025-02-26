@@ -23,7 +23,7 @@ async function fetchPluginRegistry() {
     // Update available plugins
     AVAILABLE_PLUGINS = {
       transform: Object.entries(registry)
-        .filter(([_, metadata]) => metadata.type === "transform")
+        .filter(([_, metadata]) => metadata.type === "transformer")
         .map(([name]) => name),
       distribute: Object.entries(registry)
         .filter(([_, metadata]) => metadata.type === "distributor")
@@ -150,7 +150,7 @@ const DEFAULT_CONFIG = {
 // DOM Elements
 const configEditor = document.getElementById("configEditor");
 const contentEditor = document.getElementById("contentEditor");
-const transformBtn = document.getElementById("transform");
+const transformBtn = document.getElementById("transformer");
 const saveConfigBtn = document.getElementById("saveConfig");
 const resetConfigBtn = document.getElementById("resetConfig");
 const distributeBtn = document.getElementById("distribute");
@@ -193,7 +193,7 @@ function updateConfigView() {
     // Add transform plugins
     if (config.transform && Array.isArray(config.transform)) {
       config.transform.forEach((transform, index) => {
-        addPluginToList("transform", transform, index);
+        addPluginToList("transformer", transform, index);
       });
     }
 
@@ -211,7 +211,7 @@ function updateConfigView() {
 // Add a plugin configuration to the appropriate list
 function addPluginToList(type, plugin, index) {
   const list =
-    type === "transform" ? transformPluginList : distributePluginList;
+    type === "transformer" ? transformPluginList : distributePluginList;
   const div = document.createElement("div");
   div.className = "plugin-item";
 
@@ -287,7 +287,7 @@ function addNewPlugin(type) {
   addPluginToList(
     type,
     pluginConfig,
-    type === "transform"
+    type === "transformer"
       ? transformPluginList.children.length
       : distributePluginList.children.length,
   );
@@ -341,7 +341,7 @@ function updateJsonView() {
 
 // Update transform button state
 function updateTransformButton() {
-  const transformBtn = document.getElementById("transform");
+  const transformBtn = document.getElementById("transformer");
   try {
     const config = JSON.parse(configEditor.value);
     transformBtn.disabled =
@@ -361,7 +361,7 @@ async function transformContent() {
     return;
   }
 
-  const transformBtn = document.getElementById("transform");
+  const transformBtn = document.getElementById("transformer");
   transformBtn.disabled = true;
 
   try {
@@ -565,7 +565,7 @@ viewToggle.addEventListener("click", toggleView);
 
 document
   .getElementById("addTransformPlugin")
-  .addEventListener("click", () => addNewPlugin("transform"));
+  .addEventListener("click", () => addNewPlugin("transformer"));
 document
   .getElementById("addDistributePlugin")
   .addEventListener("click", () => addNewPlugin("distribute"));

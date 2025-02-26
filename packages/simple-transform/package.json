@@ -1,6 +1,6 @@
 {
   "name": "@curatedotfun/simple-transform",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Simple transform plugin for curatedotfun",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "keywords": [
     "curatedotfun",
-    "transform",
+    "transformer",
     "plugin"
   ],
   "scripts": {

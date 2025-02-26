@@ -10,7 +10,7 @@ interface PluginMetadata {
 let pluginRegistry: Record<string, PluginMetadata> = {
   "@curatedotfun/object-transform": {
     url: "http://localhost:3008/remoteEntry.js",
-    type: "transform",
+    type: "transformer",
   },
   "@curatedotfun/notion": {
     url: "http://localhost:3003/remoteEntry.js",
@@ -30,11 +30,11 @@ let pluginRegistry: Record<string, PluginMetadata> = {
   },
   "@curatedotfun/simple-transform": {
     url: "http://localhost:3005/remoteEntry.js",
-    type: "transform",
+    type: "transformer",
   },
   "@curatedotfun/ai-transform": {
     url: "http://localhost:3002/remoteEntry.js",
-    type: "transform",
+    type: "transformer",
   },
 };
 
@@ -56,7 +56,7 @@ export function setPluginRegistry(
         `Invalid plugin metadata for ${name}: missing url or type`,
       );
     }
-    if (!["distributor", "transform"].includes(metadata.type)) {
+    if (!["distributor", "transformer"].includes(metadata.type)) {
       throw new Error(`Invalid plugin type for ${name}: ${metadata.type}`);
     }
   }

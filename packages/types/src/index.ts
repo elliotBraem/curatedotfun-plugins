@@ -53,7 +53,7 @@ export type PluginTypeMap<
   TOutput,
   TConfig extends Record<string, unknown>,
 > = {
-  transform: TransformerPlugin<TInput, TOutput, TConfig>;
+  transformer: TransformerPlugin<TInput, TOutput, TConfig>;
   distributor: DistributorPlugin<TInput, TConfig>;
 };
 
